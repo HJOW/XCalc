@@ -1,4 +1,4 @@
-var hjow = {};
+﻿var hjow = {};
 var h = hjow;
 h.property = {};
 h.property.screenWidth = 1024;
@@ -532,9 +532,7 @@ function hjow_supportES6() {
     try {
         var testObj = 1;
         (function (testObj) {
-            if (testObj === void 0) {
-                testObj = 0;
-            }
+            if (testObj === void 0) { testObj = 0; }
             return testObj;
         });
         return true;

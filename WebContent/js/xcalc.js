@@ -1,8 +1,13 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -217,9 +222,9 @@ var TBigInt = (function (_super) {
     };
     return TBigInt;
 }(UtilityMethods));
-var xcalcReplayAction = (function (_super) {
-    __extends(xcalcReplayAction, _super);
-    function xcalcReplayAction() {
+var XCalcReplayAction = (function (_super) {
+    __extends(XCalcReplayAction, _super);
+    function XCalcReplayAction() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.date = null;
         _this.actionPlayerIndex = 0;
@@ -227,7 +232,7 @@ var xcalcReplayAction = (function (_super) {
         _this.card = null;
         return _this;
     }
-    xcalcReplayAction.prototype.toPlainObject = function () {
+    XCalcReplayAction.prototype.toPlainObject = function () {
         return {
             date: hjow_date_to_string(this.date),
             actionPlayerIndex: this.actionPlayerIndex,
@@ -235,22 +240,22 @@ var xcalcReplayAction = (function (_super) {
             card: this.card
         };
     };
-    xcalcReplayAction.prototype.toPlainObjectDetail = function (engine) {
+    XCalcReplayAction.prototype.toPlainObjectDetail = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var results = this.toPlainObject();
         if (this.card != null)
             results.card = this.card.toPlainObjectDetail(engine);
         return results;
     };
-    return xcalcReplayAction;
+    return XCalcReplayAction;
 }(UtilityMethods));
 ;
-var xcalcReplay = (function (_super) {
-    __extends(xcalcReplay, _super);
-    function xcalcReplay() {
+var XCalcReplay = (function (_super) {
+    __extends(XCalcReplay, _super);
+    function XCalcReplay() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.date = new Date();
         _this.actions = [];
@@ -261,10 +266,10 @@ var xcalcReplay = (function (_super) {
         _this.debugModeUsed = false;
         return _this;
     }
-    xcalcReplay.prototype.toPlainObjectDetail = function (engine) {
+    XCalcReplay.prototype.toPlainObjectDetail = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var actionPlains = [];
         for (var adx = 0; adx < this.actions.length; adx++) {
@@ -289,18 +294,18 @@ var xcalcReplay = (function (_super) {
         };
     };
     ;
-    return xcalcReplay;
+    return XCalcReplay;
 }(UtilityMethods));
 ;
-var xcalcAIProcessAction = (function (_super) {
-    __extends(xcalcAIProcessAction, _super);
-    function xcalcAIProcessAction() {
+var XCalcAIProcessAction = (function (_super) {
+    __extends(XCalcAIProcessAction, _super);
+    function XCalcAIProcessAction() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.calculatedAIPoint = null;
         return _this;
     }
-    return xcalcAIProcessAction;
-}(xcalcReplayAction));
+    return XCalcAIProcessAction;
+}(XCalcReplayAction));
 var LanguageSet = (function (_super) {
     __extends(LanguageSet, _super);
     function LanguageSet() {
@@ -463,15 +468,15 @@ var ImportantTimer = (function (_super) {
     return ImportantTimer;
 }(IntervalTimer));
 ;
-var xcalc = (function (_super) {
-    __extends(xcalc, _super);
-    function xcalc() {
+var XCalc = (function (_super) {
+    __extends(XCalc, _super);
+    function XCalc() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.no = 0;
         _this.op = '';
         return _this;
     }
-    xcalc.prototype.apply = function (beforeVal) {
+    XCalc.prototype.apply = function (beforeVal) {
         if (this.op == '+' || this.op == '＋')
             return new TBigInt(beforeVal).add(new TBigInt(this.no));
         if (this.op == '-' || this.op == '－')
@@ -480,13 +485,13 @@ var xcalc = (function (_super) {
             return new TBigInt(beforeVal).multiply(new TBigInt(this.no));
         return beforeVal;
     };
-    xcalc.prototype.clone = function () {
-        var newOne = new xcalc();
+    XCalc.prototype.clone = function () {
+        var newOne = new XCalc();
         newOne.no = this.no;
         newOne.op = this.op;
         return newOne;
     };
-    xcalc.prototype.toString = function () {
+    XCalc.prototype.toString = function () {
         var result = this.op + " ";
         if (this.no < 0)
             result += '(' + this.no + ')';
@@ -494,7 +499,7 @@ var xcalc = (function (_super) {
             result += this.no + '';
         return result;
     };
-    xcalc.prototype.toPlainObject = function () {
+    XCalc.prototype.toPlainObject = function () {
         var result = {
             op: this.op,
             no: this.no,
@@ -509,28 +514,28 @@ var xcalc = (function (_super) {
         };
         return result;
     };
-    xcalc.prototype.toPlainObjectDetail = function (engine) {
+    XCalc.prototype.toPlainObjectDetail = function (engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         var result = this.toPlainObject();
         result.uniqueId = this.uniqueId;
         return result;
     };
-    xcalc.prototype.setUniqueId = function (engine, uniqueId) {
+    XCalc.prototype.setUniqueId = function (engine, uniqueId) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.uniqueId = uniqueId;
     };
-    return xcalc;
+    return XCalc;
 }(Uniqueable));
 ;
-var xcalcPlayer = (function (_super) {
-    __extends(xcalcPlayer, _super);
-    function xcalcPlayer(name) {
+var XCalcPlayer = (function (_super) {
+    __extends(XCalcPlayer, _super);
+    function XCalcPlayer(name) {
         var _this = _super.call(this) || this;
         _this.name = "";
         _this.inventory = [];
@@ -539,40 +544,40 @@ var xcalcPlayer = (function (_super) {
         return _this;
     }
     ;
-    xcalcPlayer.prototype.getClassName = function () {
-        return "xcalcPlayer";
+    XCalcPlayer.prototype.getClassName = function () {
+        return "XCalcPlayer";
     };
     ;
-    xcalcPlayer.prototype.getName = function () {
+    XCalcPlayer.prototype.getName = function () {
         return this.name;
     };
     ;
-    xcalcPlayer.prototype.setInventory = function (cardList, engine) {
+    XCalcPlayer.prototype.setInventory = function (cardList, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.inventory = cardList;
     };
     ;
-    xcalcPlayer.prototype.setApplied = function (cardList, engine) {
+    XCalcPlayer.prototype.setApplied = function (cardList, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.applied = cardList;
     };
     ;
-    xcalcPlayer.prototype.lastAppliedCard = function () {
+    XCalcPlayer.prototype.lastAppliedCard = function () {
         if (this.applied.length == 0)
             return null;
         return this.applied[this.applied.length - 1];
     };
     ;
-    xcalcPlayer.prototype.findInventoryCard = function (engine, cardUniqId) {
+    XCalcPlayer.prototype.findInventoryCard = function (engine, cardUniqId) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         for (var idx = 0; idx < this.inventory.length; idx++) {
             if (this.inventory[idx].getUniqueId() == cardUniqId) {
@@ -582,10 +587,10 @@ var xcalcPlayer = (function (_super) {
         return null;
     };
     ;
-    xcalcPlayer.prototype.listInventoryDirect = function (engine) {
+    XCalcPlayer.prototype.listInventoryDirect = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var newList = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
@@ -594,7 +599,7 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listInventory = function () {
+    XCalcPlayer.prototype.listInventory = function () {
         var newList = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
             newList.push(this.inventory[idx].clone());
@@ -602,7 +607,7 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listInventoryPlainObject = function () {
+    XCalcPlayer.prototype.listInventoryPlainObject = function () {
         var newList = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
             newList.push(this.inventory[idx].toPlainObject());
@@ -610,10 +615,10 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listAppliedDirect = function (engine) {
+    XCalcPlayer.prototype.listAppliedDirect = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var newList = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
@@ -622,7 +627,7 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listApplied = function () {
+    XCalcPlayer.prototype.listApplied = function () {
         var newList = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
             newList.push(this.applied[idx].clone());
@@ -630,7 +635,7 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listAppliedPlainObject = function () {
+    XCalcPlayer.prototype.listAppliedPlainObject = function () {
         var newList = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
             newList.push(this.applied[idx].toPlainObject());
@@ -638,7 +643,7 @@ var xcalcPlayer = (function (_super) {
         return newList;
     };
     ;
-    xcalcPlayer.prototype.listAppliedAsString = function () {
+    XCalcPlayer.prototype.listAppliedAsString = function () {
         var affects = "0";
         var lastOp = "+";
         for (var idx = 0; idx < this.applied.length; idx++) {
@@ -666,7 +671,7 @@ var xcalcPlayer = (function (_super) {
         return affects;
     };
     ;
-    xcalcPlayer.prototype.removeCardOnInventory = function (card) {
+    XCalcPlayer.prototype.removeCardOnInventory = function (card) {
         var ownerInvIdx = 0;
         for (var idx = 0; idx < this.inventory.length; idx++) {
             if (this.inventory[idx].getUniqueId() == card.getUniqueId()) {
@@ -677,24 +682,24 @@ var xcalcPlayer = (function (_super) {
         hjow_removeItemFromArray(this.inventory, ownerInvIdx);
     };
     ;
-    xcalcPlayer.prototype.addOneOnInventory = function (card, engine) {
+    XCalcPlayer.prototype.addOneOnInventory = function (card, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.inventory.push(card);
     };
     ;
-    xcalcPlayer.prototype.getInventoryCardCount = function () {
+    XCalcPlayer.prototype.getInventoryCardCount = function () {
         return this.inventory.length;
     };
     ;
-    xcalcPlayer.prototype.resetCards = function () {
+    XCalcPlayer.prototype.resetCards = function () {
         this.inventory = [];
         this.applied = [];
     };
     ;
-    xcalcPlayer.prototype.canPay = function (card, owner) {
+    XCalcPlayer.prototype.canPay = function (card, owner) {
         var lastCard = this.lastAppliedCard();
         if (card == null || owner == null)
             return hjow_trans("Please select your card first.");
@@ -712,7 +717,7 @@ var xcalcPlayer = (function (_super) {
         return hjow_replaceStr(hjow_trans("The number, or the operation symbol should equal to the card [[LASTCARD]]"), "[[LASTCARD]]", lastCard.toString());
     };
     ;
-    xcalcPlayer.prototype.canPayByUniqId = function (cardUniqId, owner) {
+    XCalcPlayer.prototype.canPayByUniqId = function (cardUniqId, owner) {
         var card = null;
         if (cardUniqId == null)
             return hjow_trans("Please select your card first.");
@@ -724,7 +729,7 @@ var xcalcPlayer = (function (_super) {
         return this.canPay(card, owner);
     };
     ;
-    xcalcPlayer.prototype.pay = function (card, owner) {
+    XCalcPlayer.prototype.pay = function (card, owner) {
         var lastCard = this.lastAppliedCard();
         var err = this.canPay(card, owner);
         if (err != null)
@@ -734,7 +739,7 @@ var xcalcPlayer = (function (_super) {
         return null;
     };
     ;
-    xcalcPlayer.prototype.payByUniqId = function (cardUniqId, owner) {
+    XCalcPlayer.prototype.payByUniqId = function (cardUniqId, owner) {
         var card = null;
         if (cardUniqId == null)
             return hjow_trans("Please select your card first.");
@@ -746,7 +751,7 @@ var xcalcPlayer = (function (_super) {
         return this.pay(card, owner);
     };
     ;
-    xcalcPlayer.prototype.getCurrentPoint = function (gameMode) {
+    XCalcPlayer.prototype.getCurrentPoint = function (gameMode) {
         var results = new TBigInt(0);
         for (var idx = 0; idx < this.applied.length; idx++) {
             var cardOne = this.applied[idx];
@@ -755,7 +760,7 @@ var xcalcPlayer = (function (_super) {
         return gameMode.processPoint(this, results);
     };
     ;
-    xcalcPlayer.prototype.getCurrentPointIfPaid = function (gameMode, additionalCard) {
+    XCalcPlayer.prototype.getCurrentPointIfPaid = function (gameMode, additionalCard) {
         var results = new TBigInt(0);
         var simulatedApplied = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
@@ -769,72 +774,72 @@ var xcalcPlayer = (function (_super) {
         return gameMode.processPoint(this, results);
     };
     ;
-    xcalcPlayer.prototype.customMainHTML = function () {
+    XCalcPlayer.prototype.customMainHTML = function () {
         return null;
     };
     ;
-    xcalcPlayer.prototype.customGameHTML = function () {
+    XCalcPlayer.prototype.customGameHTML = function () {
         return null;
     };
     ;
-    xcalcPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
+    XCalcPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
     };
     ;
-    xcalcPlayer.prototype.refreshMain = function (engine) {
+    XCalcPlayer.prototype.refreshMain = function (engine) {
     };
     ;
-    xcalcPlayer.prototype.refreshGame = function (engine) {
+    XCalcPlayer.prototype.refreshGame = function (engine) {
     };
     ;
-    xcalcPlayer.prototype.getPlayerTypeName = function () {
+    XCalcPlayer.prototype.getPlayerTypeName = function () {
         return null;
     };
     ;
-    xcalcPlayer.prototype.isUserControllable = function () {
+    XCalcPlayer.prototype.isUserControllable = function () {
         return true;
     };
     ;
-    xcalcPlayer.prototype.needToHideInventoryForSelf = function () {
+    XCalcPlayer.prototype.needToHideInventoryForSelf = function () {
         return false;
     };
     ;
-    xcalcPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
+    XCalcPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
     };
     ;
-    xcalcPlayer.prototype.setName = function (name, engine) {
+    XCalcPlayer.prototype.setName = function (name, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         if (!this.isNameEditable())
             return;
         this.name = name;
     };
     ;
-    xcalcPlayer.prototype.isNameEditable = function () {
+    XCalcPlayer.prototype.isNameEditable = function () {
         return true;
     };
     ;
-    xcalcPlayer.prototype.setUniqueId = function (uniqueId) {
+    XCalcPlayer.prototype.setUniqueId = function (uniqueId) {
         this.uniqueId = uniqueId;
     };
     ;
-    xcalcPlayer.prototype.setUniqueIdFromMode = function (mode, uniqueId) {
+    XCalcPlayer.prototype.setUniqueIdFromMode = function (mode, uniqueId) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         this.uniqueId = uniqueId;
     };
     ;
-    xcalcPlayer.prototype.toPlainObject = function (engine) {
+    XCalcPlayer.prototype.toPlainObject = function (engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         var invArr = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
@@ -853,109 +858,109 @@ var xcalcPlayer = (function (_super) {
         };
     };
     ;
-    return xcalcPlayer;
+    return XCalcPlayer;
 }(Uniqueable));
 ;
-var xcalcPlayerCreator = (function (_super) {
-    __extends(xcalcPlayerCreator, _super);
-    function xcalcPlayerCreator() {
+var XCalcPlayerCreator = (function (_super) {
+    __extends(XCalcPlayerCreator, _super);
+    function XCalcPlayerCreator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    xcalcPlayerCreator.prototype.getTypeName = function () {
+    XCalcPlayerCreator.prototype.getTypeName = function () {
         return null;
     };
     ;
-    xcalcPlayerCreator.prototype.getSupportPlayerClassName = function () {
+    XCalcPlayerCreator.prototype.getSupportPlayerClassName = function () {
         return null;
     };
     ;
-    xcalcPlayerCreator.prototype.create = function (name) {
+    XCalcPlayerCreator.prototype.create = function (name) {
         return null;
     };
     ;
-    xcalcPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
+    XCalcPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
         return null;
     };
     ;
-    xcalcPlayerCreator.prototype.restoreFromJSON = function (json, engine) {
+    XCalcPlayerCreator.prototype.restoreFromJSON = function (json, engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         return this.restoreFromPlainObject(JSON.parse(json), engine);
     };
     ;
-    xcalcPlayerCreator.prototype.isUserSelect = function () {
+    XCalcPlayerCreator.prototype.isUserSelect = function () {
         return true;
     };
     ;
-    return xcalcPlayerCreator;
+    return XCalcPlayerCreator;
 }(Uniqueable));
 ;
-var xcalcUserPlayer = (function (_super) {
-    __extends(xcalcUserPlayer, _super);
-    function xcalcUserPlayer(name) {
+var XCalcUserPlayer = (function (_super) {
+    __extends(XCalcUserPlayer, _super);
+    function XCalcUserPlayer(name) {
         return _super.call(this, name) || this;
     }
     ;
-    xcalcUserPlayer.prototype.getClassName = function () {
-        return "xcalcUserPlayer";
+    XCalcUserPlayer.prototype.getClassName = function () {
+        return "XCalcUserPlayer";
     };
     ;
-    xcalcUserPlayer.prototype.getPlayerTypeName = function () {
+    XCalcUserPlayer.prototype.getPlayerTypeName = function () {
         return "Player";
     };
     ;
-    xcalcUserPlayer.prototype.toPlainObject = function (engine) {
+    XCalcUserPlayer.prototype.toPlainObject = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var result = _super.prototype.toPlainObject.call(this, engine);
         result.type = this.getClassName();
         return result;
     };
     ;
-    xcalcUserPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
+    XCalcUserPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
         if (creator == null)
             return;
-        if (!(creator instanceof xcalcUserPlayerCreator))
+        if (!(creator instanceof XCalcUserPlayerCreator))
             return;
         this.setUniqueId(uniqueId);
     };
     ;
-    return xcalcUserPlayer;
-}(xcalcPlayer));
+    return XCalcUserPlayer;
+}(XCalcPlayer));
 ;
-var xcalcUserPlayerCreator = (function (_super) {
-    __extends(xcalcUserPlayerCreator, _super);
-    function xcalcUserPlayerCreator() {
+var XCalcUserPlayerCreator = (function (_super) {
+    __extends(XCalcUserPlayerCreator, _super);
+    function XCalcUserPlayerCreator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    xcalcUserPlayerCreator.prototype.getTypeName = function () {
+    XCalcUserPlayerCreator.prototype.getTypeName = function () {
         return "Player";
     };
     ;
-    xcalcUserPlayerCreator.prototype.create = function (name) {
-        return new xcalcUserPlayer(name);
+    XCalcUserPlayerCreator.prototype.create = function (name) {
+        return new XCalcUserPlayer(name);
     };
     ;
-    xcalcUserPlayerCreator.prototype.getSupportPlayerClassName = function () {
-        return "xcalcUserPlayer";
+    XCalcUserPlayerCreator.prototype.getSupportPlayerClassName = function () {
+        return "XCalcUserPlayer";
     };
     ;
-    xcalcUserPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
+    XCalcUserPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         if (obj.type != this.getSupportPlayerClassName())
             return null;
-        var result = new xcalcUserPlayer(obj.name);
+        var result = new XCalcUserPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
         var invArr = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
@@ -964,7 +969,7 @@ var xcalcUserPlayerCreator = (function (_super) {
         result.setInventory(invArr, engine);
         var appArr = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -974,8 +979,8 @@ var xcalcUserPlayerCreator = (function (_super) {
         return result;
     };
     ;
-    return xcalcUserPlayerCreator;
-}(xcalcPlayerCreator));
+    return XCalcUserPlayerCreator;
+}(XCalcPlayerCreator));
 ;
 function hjow_orderPlayerList(players, gameMode) {
     var playerOrders = [];
@@ -1009,51 +1014,51 @@ function hjow_orderPlayerList(players, gameMode) {
     return playerOrders;
 }
 ;
-var xcalcAIPlayer = (function (_super) {
-    __extends(xcalcAIPlayer, _super);
-    function xcalcAIPlayer(name) {
+var XCalcAIPlayer = (function (_super) {
+    __extends(XCalcAIPlayer, _super);
+    function XCalcAIPlayer(name) {
         var _this = _super.call(this, name) || this;
         _this.difficulty = 0;
         _this.customAIScript = null;
         return _this;
     }
     ;
-    xcalcAIPlayer.prototype.getClassName = function () {
-        return "xcalcAIPlayer";
+    XCalcAIPlayer.prototype.getClassName = function () {
+        return "XCalcAIPlayer";
     };
     ;
-    xcalcAIPlayer.prototype.getPlayerTypeName = function () {
+    XCalcAIPlayer.prototype.getPlayerTypeName = function () {
         return "AI";
     };
     ;
-    xcalcAIPlayer.prototype.isUserControllable = function () {
+    XCalcAIPlayer.prototype.isUserControllable = function () {
         return false;
     };
     ;
-    xcalcAIPlayer.prototype.needToHideInventoryForSelf = function () {
+    XCalcAIPlayer.prototype.needToHideInventoryForSelf = function () {
         return true;
     };
     ;
-    xcalcAIPlayer.prototype.setDifficulty = function (diff, engine) {
+    XCalcAIPlayer.prototype.setDifficulty = function (diff, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.difficulty = diff;
     };
     ;
-    xcalcAIPlayer.prototype.setCustomAIScript = function (scripts, engine) {
+    XCalcAIPlayer.prototype.setCustomAIScript = function (scripts, engine) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         this.customAIScript = scripts;
     };
     ;
-    xcalcAIPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
+    XCalcAIPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
         if (engine == null)
             return;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return;
         if (engine.isActPlayerStopRequested() || (!engine.isThisTurn(this)))
             return;
@@ -1094,7 +1099,7 @@ var xcalcAIPlayer = (function (_super) {
                 defendees = 4;
             if (this.difficulty == 0)
                 defendees = 8;
-            oneAct = new xcalcAIProcessAction();
+            oneAct = new XCalcAIProcessAction();
             oneAct.card = null;
             oneAct.payTargetPlayerIndex = -1;
             oneAct.actionPlayerIndex = 0;
@@ -1177,7 +1182,7 @@ var xcalcAIPlayer = (function (_super) {
                             actionPoint = actionPoint.subtract(playerAnother.getCurrentPoint(mode));
                         }
                     }
-                    oneAct = new xcalcAIProcessAction();
+                    oneAct = new XCalcAIProcessAction();
                     oneAct.card = invCard;
                     oneAct.payTargetPlayerIndex = pdx;
                     oneAct.actionPlayerIndex = 0;
@@ -1302,7 +1307,7 @@ var xcalcAIPlayer = (function (_super) {
         }
     };
     ;
-    xcalcAIPlayer.prototype.customMainHTML = function () {
+    XCalcAIPlayer.prototype.customMainHTML = function () {
         var results = "";
         results += "<div class='div_player_ai_custom'>";
         results += "<div class='div_player_ai_custom_element'>";
@@ -1330,7 +1335,7 @@ var xcalcAIPlayer = (function (_super) {
         return results;
     };
     ;
-    xcalcAIPlayer.prototype.refreshMain = function (engine) {
+    XCalcAIPlayer.prototype.refreshMain = function (engine) {
         var playerBlock = jq(engine.getPlaceArea()).find(".pbasic_" + this.getUniqueId());
         var textBlock = playerBlock.find('.tx_ai_script');
         textBlock.val('');
@@ -1338,7 +1343,7 @@ var xcalcAIPlayer = (function (_super) {
             textBlock.val(this.customAIScript);
     };
     ;
-    xcalcAIPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
+    XCalcAIPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
         if (gameStarted)
             return;
         if (needHideScreen)
@@ -1355,10 +1360,10 @@ var xcalcAIPlayer = (function (_super) {
         }
     };
     ;
-    xcalcAIPlayer.prototype.toPlainObject = function (engine) {
+    XCalcAIPlayer.prototype.toPlainObject = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var result = _super.prototype.toPlainObject.call(this, engine);
         result.type = this.getClassName();
@@ -1367,46 +1372,46 @@ var xcalcAIPlayer = (function (_super) {
         return result;
     };
     ;
-    xcalcAIPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
+    XCalcAIPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
         if (creator == null)
             return;
-        if (!(creator instanceof xcalcAIPlayerCreator))
+        if (!(creator instanceof XCalcAIPlayerCreator))
             return;
         this.setUniqueId(uniqueId);
     };
     ;
-    return xcalcAIPlayer;
-}(xcalcPlayer));
+    return XCalcAIPlayer;
+}(XCalcPlayer));
 ;
-var xcalcAIPlayerCreator = (function (_super) {
-    __extends(xcalcAIPlayerCreator, _super);
-    function xcalcAIPlayerCreator() {
+var XCalcAIPlayerCreator = (function (_super) {
+    __extends(XCalcAIPlayerCreator, _super);
+    function XCalcAIPlayerCreator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    xcalcAIPlayerCreator.prototype.getTypeName = function () {
+    XCalcAIPlayerCreator.prototype.getTypeName = function () {
         return "AI";
     };
     ;
-    xcalcAIPlayerCreator.prototype.create = function (name) {
-        return new xcalcAIPlayer(name);
+    XCalcAIPlayerCreator.prototype.create = function (name) {
+        return new XCalcAIPlayer(name);
     };
     ;
-    xcalcAIPlayerCreator.prototype.getSupportPlayerClassName = function () {
-        return "xcalcAIPlayer";
+    XCalcAIPlayerCreator.prototype.getSupportPlayerClassName = function () {
+        return "XCalcAIPlayer";
     };
     ;
-    xcalcAIPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
+    XCalcAIPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         if (obj.type != this.getSupportPlayerClassName())
             return null;
-        var result = new xcalcAIPlayer(obj.name);
+        var result = new XCalcAIPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
         var invArr = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
@@ -1415,7 +1420,7 @@ var xcalcAIPlayerCreator = (function (_super) {
         result.setInventory(invArr, engine);
         var appArr = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -1427,31 +1432,31 @@ var xcalcAIPlayerCreator = (function (_super) {
         return result;
     };
     ;
-    return xcalcAIPlayerCreator;
-}(xcalcPlayerCreator));
+    return XCalcAIPlayerCreator;
+}(XCalcPlayerCreator));
 ;
-var xcalcTutorialPlayer = (function (_super) {
-    __extends(xcalcTutorialPlayer, _super);
-    function xcalcTutorialPlayer(name) {
+var XCalcTutorialPlayer = (function (_super) {
+    __extends(XCalcTutorialPlayer, _super);
+    function XCalcTutorialPlayer(name) {
         var _this = _super.call(this, name) || this;
         _this.difficulty = 9;
         return _this;
     }
-    xcalcTutorialPlayer.prototype.getPlayerTypeName = function () {
+    XCalcTutorialPlayer.prototype.getPlayerTypeName = function () {
         return "Tutorial Assistant";
     };
     ;
-    xcalcTutorialPlayer.prototype.getClassName = function () {
-        return "xcalcTutorialPlayer";
+    XCalcTutorialPlayer.prototype.getClassName = function () {
+        return "XCalcTutorialPlayer";
     };
     ;
-    xcalcTutorialPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
+    XCalcTutorialPlayer.prototype.actOnTurn = function (engine, mode, deck, players, turnNumber) {
     };
     ;
-    xcalcTutorialPlayer.prototype.toPlainObject = function (engine) {
+    XCalcTutorialPlayer.prototype.toPlainObject = function (engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         var result = _super.prototype.toPlainObject.call(this, engine);
         result.type = this.getClassName();
@@ -1460,61 +1465,61 @@ var xcalcTutorialPlayer = (function (_super) {
         return result;
     };
     ;
-    xcalcTutorialPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
+    XCalcTutorialPlayer.prototype.setUniqueIdFromCreator = function (creator, uniqueId) {
         if (creator == null)
             return;
-        if (!(creator instanceof xcalcTutorialPlayerCreator))
+        if (!(creator instanceof XCalcTutorialPlayerCreator))
             return;
         this.setUniqueId(uniqueId);
     };
     ;
-    xcalcTutorialPlayer.prototype.customMainHTML = function () {
+    XCalcTutorialPlayer.prototype.customMainHTML = function () {
         return null;
     };
     ;
-    xcalcTutorialPlayer.prototype.refreshMain = function (engine) {
+    XCalcTutorialPlayer.prototype.refreshMain = function (engine) {
     };
     ;
-    xcalcTutorialPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
+    XCalcTutorialPlayer.prototype.applyInputs = function (engine, gameStarted, needHideScreen, showResult) {
         this.difficulty = 9;
     };
     ;
-    xcalcTutorialPlayer.prototype.isNameEditable = function () {
+    XCalcTutorialPlayer.prototype.isNameEditable = function () {
         return false;
     };
     ;
-    return xcalcTutorialPlayer;
-}(xcalcAIPlayer));
+    return XCalcTutorialPlayer;
+}(XCalcAIPlayer));
 ;
-var xcalcTutorialPlayerCreator = (function (_super) {
-    __extends(xcalcTutorialPlayerCreator, _super);
-    function xcalcTutorialPlayerCreator() {
+var XCalcTutorialPlayerCreator = (function (_super) {
+    __extends(XCalcTutorialPlayerCreator, _super);
+    function XCalcTutorialPlayerCreator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    xcalcTutorialPlayerCreator.prototype.getTypeName = function () {
+    XCalcTutorialPlayerCreator.prototype.getTypeName = function () {
         return "Tutorial Assistant";
     };
     ;
-    xcalcTutorialPlayerCreator.prototype.create = function (name) {
-        return new xcalcTutorialPlayer(name);
+    XCalcTutorialPlayerCreator.prototype.create = function (name) {
+        return new XCalcTutorialPlayer(name);
     };
     ;
-    xcalcTutorialPlayerCreator.prototype.getSupportPlayerClassName = function () {
-        return "xcalcTutorialPlayer";
+    XCalcTutorialPlayerCreator.prototype.getSupportPlayerClassName = function () {
+        return "XCalcTutorialPlayer";
     };
     ;
-    xcalcTutorialPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
+    XCalcTutorialPlayerCreator.prototype.restoreFromPlainObject = function (obj, engine) {
         if (engine == null)
             return null;
-        if (!(engine instanceof xcalcGameEngine))
+        if (!(engine instanceof XCalcGameEngine))
             return null;
         if (obj.type != this.getSupportPlayerClassName())
             return null;
-        var result = new xcalcTutorialPlayer(obj.name);
+        var result = new XCalcTutorialPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
         var invArr = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
@@ -1523,7 +1528,7 @@ var xcalcTutorialPlayerCreator = (function (_super) {
         result.setInventory(invArr, engine);
         var appArr = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -1535,41 +1540,41 @@ var xcalcTutorialPlayerCreator = (function (_super) {
         return result;
     };
     ;
-    xcalcTutorialPlayerCreator.prototype.isUserSelect = function () {
+    XCalcTutorialPlayerCreator.prototype.isUserSelect = function () {
         return false;
     };
     ;
-    return xcalcTutorialPlayerCreator;
-}(xcalcAIPlayerCreator));
+    return XCalcTutorialPlayerCreator;
+}(XCalcAIPlayerCreator));
 ;
-var xcalcGameMode = (function (_super) {
-    __extends(xcalcGameMode, _super);
-    function xcalcGameMode() {
+var XCalcGameMode = (function (_super) {
+    __extends(XCalcGameMode, _super);
+    function XCalcGameMode() {
         var _this = _super.call(this, "X Card Game Mode", "X Card Game Undefined Mode") || this;
         _this.totals = [];
         return _this;
     }
     ;
-    xcalcGameMode.prototype.getClassName = function () {
-        return "xcalcGameMode";
+    XCalcGameMode.prototype.getClassName = function () {
+        return "XCalcGameMode";
     };
     ;
-    xcalcGameMode.prototype.isGameAvailable = function (engine, players) {
+    XCalcGameMode.prototype.isGameAvailable = function (engine, players) {
         return (players.length >= 2);
     };
     ;
-    xcalcGameMode.prototype.createPlayers = function (engine) {
+    XCalcGameMode.prototype.createPlayers = function (engine) {
         return null;
     };
     ;
-    xcalcGameMode.prototype.init = function (playerCount) {
+    XCalcGameMode.prototype.init = function (playerCount) {
         this.totals = [];
         var starts = this.getStartCardNumber();
         var ends = this.getEndCardNumber();
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 2; cdx++) {
-                    var newCard = new xcalc();
+                    var newCard = new XCalc();
                     if (cdx == 0)
                         newCard.op = '+';
                     if (cdx == 1)
@@ -1584,88 +1589,88 @@ var xcalcGameMode = (function (_super) {
         hjow_ramdomizeArrayOrder(this.totals);
     };
     ;
-    xcalcGameMode.prototype.getStartCardNumber = function () {
+    XCalcGameMode.prototype.getStartCardNumber = function () {
         return -1;
     };
     ;
-    xcalcGameMode.prototype.getEndCardNumber = function () {
+    XCalcGameMode.prototype.getEndCardNumber = function () {
         return 10;
     };
     ;
-    xcalcGameMode.prototype.playerInvList = function (player) {
+    XCalcGameMode.prototype.playerInvList = function (player) {
         var result = [];
         return result;
     };
     ;
-    xcalcGameMode.prototype.deckList = function () {
+    XCalcGameMode.prototype.deckList = function () {
         var result = [];
         return result;
     };
     ;
-    xcalcGameMode.prototype.getEachPlayerTimeLimit = function (player, engine) {
+    XCalcGameMode.prototype.getEachPlayerTimeLimit = function (player, engine) {
         return 30;
     };
     ;
-    xcalcGameMode.prototype.getHideTime = function (player, engine) {
+    XCalcGameMode.prototype.getHideTime = function (player, engine) {
         if (player.isUserControllable())
             return 30;
         return 2;
     };
     ;
-    xcalcGameMode.prototype.needHide = function (player, engine) {
-        if (player instanceof xcalcAIPlayer)
+    XCalcGameMode.prototype.needHide = function (player, engine) {
+        if (player instanceof XCalcAIPlayer)
             return false;
         return true;
     };
     ;
-    xcalcGameMode.prototype.startGame = function (engine, players, deckObj) {
+    XCalcGameMode.prototype.startGame = function (engine, players, deckObj) {
         return true;
     };
     ;
-    xcalcGameMode.prototype.afterPrepareStartDefaultGame = function (engine, players, deckObj) {
+    XCalcGameMode.prototype.afterPrepareStartDefaultGame = function (engine, players, deckObj) {
     };
     ;
-    xcalcGameMode.prototype.beforeNextTurnWork = function (engine, players, deckObj, turnNumber) {
+    XCalcGameMode.prototype.beforeNextTurnWork = function (engine, players, deckObj, turnNumber) {
     };
     ;
-    xcalcGameMode.prototype.afterNextTurnWork = function (engine, players, deckObj, turnNumber) {
+    XCalcGameMode.prototype.afterNextTurnWork = function (engine, players, deckObj, turnNumber) {
     };
     ;
-    xcalcGameMode.prototype.onFinishGame = function (engine, players, deckObj) {
+    XCalcGameMode.prototype.onFinishGame = function (engine, players, deckObj) {
     };
     ;
-    xcalcGameMode.prototype.afterResultPage = function (engine, players, deckObj) {
+    XCalcGameMode.prototype.afterResultPage = function (engine, players, deckObj) {
     };
     ;
-    xcalcGameMode.prototype.processPoint = function (player, beforeCalculated) {
+    XCalcGameMode.prototype.processPoint = function (player, beforeCalculated) {
         return beforeCalculated;
     };
     ;
-    xcalcGameMode.prototype.isReplayAllowed = function () {
+    XCalcGameMode.prototype.isReplayAllowed = function () {
         return true;
     };
     ;
-    return xcalcGameMode;
+    return XCalcGameMode;
 }(ModuleObject));
 ;
-var xcalcGameDefaultMode = (function (_super) {
-    __extends(xcalcGameDefaultMode, _super);
-    function xcalcGameDefaultMode() {
+var XCalcGameDefaultMode = (function (_super) {
+    __extends(XCalcGameDefaultMode, _super);
+    function XCalcGameDefaultMode() {
         var _this = _super.call(this) || this;
         _this.name = "Normal Mode";
         _this.desc = "Each player will get 10 cards at the game starts.";
         return _this;
     }
     ;
-    xcalcGameDefaultMode.prototype.getClassName = function () {
-        return "xcalcGameDefaultMode";
+    XCalcGameDefaultMode.prototype.getClassName = function () {
+        return "XCalcGameDefaultMode";
     };
     ;
-    xcalcGameDefaultMode.prototype.playerStartCardCount = function () {
+    XCalcGameDefaultMode.prototype.playerStartCardCount = function () {
         return 10;
     };
     ;
-    xcalcGameDefaultMode.prototype.playerInvList = function (player) {
+    XCalcGameDefaultMode.prototype.playerInvList = function (player) {
         var result = [];
         var cardCnt = this.playerStartCardCount();
         for (var idx = 0; idx < cardCnt; idx++) {
@@ -1676,58 +1681,58 @@ var xcalcGameDefaultMode = (function (_super) {
         return result;
     };
     ;
-    xcalcGameDefaultMode.prototype.deckList = function () {
+    XCalcGameDefaultMode.prototype.deckList = function () {
         return hjow_simpleCloneArray(this.totals);
     };
     ;
-    return xcalcGameDefaultMode;
-}(xcalcGameMode));
+    return XCalcGameDefaultMode;
+}(XCalcGameMode));
 ;
-var xcalcGameSpeedMode = (function (_super) {
-    __extends(xcalcGameSpeedMode, _super);
-    function xcalcGameSpeedMode() {
+var XCalcGameSpeedMode = (function (_super) {
+    __extends(XCalcGameSpeedMode, _super);
+    function XCalcGameSpeedMode() {
         var _this = _super.call(this) || this;
         _this.name = "Speed Mode";
         _this.desc = "Each player will get 7 cards at the game starts. The number of card will be -1 to 5.";
         return _this;
     }
     ;
-    xcalcGameSpeedMode.prototype.getClassName = function () {
-        return "xcalcGameSpeedMode";
+    XCalcGameSpeedMode.prototype.getClassName = function () {
+        return "XCalcGameSpeedMode";
     };
     ;
-    xcalcGameSpeedMode.prototype.playerStartCardCount = function () {
+    XCalcGameSpeedMode.prototype.playerStartCardCount = function () {
         return 7;
     };
     ;
-    xcalcGameSpeedMode.prototype.getEndCardNumber = function () {
+    XCalcGameSpeedMode.prototype.getEndCardNumber = function () {
         return 5;
     };
     ;
-    xcalcGameSpeedMode.prototype.getEachPlayerTimeLimit = function (player, engine) {
+    XCalcGameSpeedMode.prototype.getEachPlayerTimeLimit = function (player, engine) {
         return 20;
     };
     ;
-    return xcalcGameSpeedMode;
-}(xcalcGameDefaultMode));
+    return XCalcGameSpeedMode;
+}(XCalcGameDefaultMode));
 ;
-var xcalcGameMultiplylessMode = (function (_super) {
-    __extends(xcalcGameMultiplylessMode, _super);
-    function xcalcGameMultiplylessMode() {
+var XCalcGameMultiplylessMode = (function (_super) {
+    __extends(XCalcGameMultiplylessMode, _super);
+    function XCalcGameMultiplylessMode() {
         var _this = _super.call(this) || this;
         _this.name = "Multiplyless Mode";
         _this.desc = "There is no × card.";
         return _this;
     }
     ;
-    xcalcGameMultiplylessMode.prototype.init = function (playerCount) {
+    XCalcGameMultiplylessMode.prototype.init = function (playerCount) {
         this.totals = [];
         var starts = this.getStartCardNumber();
         var ends = this.getEndCardNumber();
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 1; cdx++) {
-                    var newCard = new xcalc();
+                    var newCard = new XCalc();
                     if (cdx == 0)
                         newCard.op = '+';
                     if (cdx == 1)
@@ -1740,34 +1745,34 @@ var xcalcGameMultiplylessMode = (function (_super) {
         hjow_ramdomizeArrayOrder(this.totals);
     };
     ;
-    xcalcGameMultiplylessMode.prototype.getStartCardNumber = function () {
+    XCalcGameMultiplylessMode.prototype.getStartCardNumber = function () {
         return 0;
     };
     ;
-    xcalcGameMultiplylessMode.prototype.getClassName = function () {
-        return "xcalcGameMultiplylessMode";
+    XCalcGameMultiplylessMode.prototype.getClassName = function () {
+        return "XCalcGameMultiplylessMode";
     };
     ;
-    return xcalcGameMultiplylessMode;
-}(xcalcGameDefaultMode));
+    return XCalcGameMultiplylessMode;
+}(XCalcGameDefaultMode));
 ;
-var xcalcGamePluslessMode = (function (_super) {
-    __extends(xcalcGamePluslessMode, _super);
-    function xcalcGamePluslessMode() {
+var XCalcGamePluslessMode = (function (_super) {
+    __extends(XCalcGamePluslessMode, _super);
+    function XCalcGamePluslessMode() {
         var _this = _super.call(this) || this;
         _this.name = "Plusless Mode";
         _this.desc = "There is no ＋ card.";
         return _this;
     }
     ;
-    xcalcGamePluslessMode.prototype.init = function (playerCount) {
+    XCalcGamePluslessMode.prototype.init = function (playerCount) {
         this.totals = [];
         var starts = this.getStartCardNumber();
         var ends = this.getEndCardNumber();
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 1; cdx++) {
-                    var newCard = new xcalc();
+                    var newCard = new XCalc();
                     if (cdx == 0)
                         newCard.op = '×';
                     if (cdx == 1)
@@ -1780,67 +1785,67 @@ var xcalcGamePluslessMode = (function (_super) {
         hjow_ramdomizeArrayOrder(this.totals);
     };
     ;
-    xcalcGamePluslessMode.prototype.getClassName = function () {
-        return "xcalcGamePluslessMode";
+    XCalcGamePluslessMode.prototype.getClassName = function () {
+        return "XCalcGamePluslessMode";
     };
     ;
-    return xcalcGamePluslessMode;
-}(xcalcGameDefaultMode));
+    return XCalcGamePluslessMode;
+}(XCalcGameDefaultMode));
 ;
-var xcalcGameTutorial = (function (_super) {
-    __extends(xcalcGameTutorial, _super);
-    function xcalcGameTutorial() {
+var XCalcGameTutorial = (function (_super) {
+    __extends(XCalcGameTutorial, _super);
+    function XCalcGameTutorial() {
         var _this = _super.call(this) || this;
         _this.name = "Tutorial";
         _this.desc = "Try this first to learn about this game.";
         return _this;
     }
     ;
-    xcalcGameTutorial.prototype.getClassName = function () {
-        return "xcalcGameTutorial";
+    XCalcGameTutorial.prototype.getClassName = function () {
+        return "XCalcGameTutorial";
     };
     ;
-    xcalcGameTutorial.prototype.isGameAvailable = function (engine, players) {
+    XCalcGameTutorial.prototype.isGameAvailable = function (engine, players) {
         return true;
     };
     ;
-    xcalcGameTutorial.prototype.createPlayers = function (engine) {
+    XCalcGameTutorial.prototype.createPlayers = function (engine) {
         var results = [];
         var newCardHaves = [];
         var newCard = null;
-        var newPlayer = new xcalcUserPlayer(hjow_trans("Player"));
+        var newPlayer = new XCalcUserPlayer(hjow_trans("Player"));
         newPlayer.setUniqueIdFromMode(this, "p0");
         results.push(newPlayer);
-        newPlayer = new xcalcTutorialPlayer(hjow_trans("AI") + " 1");
+        newPlayer = new XCalcTutorialPlayer(hjow_trans("AI") + " 1");
         newPlayer.setUniqueIdFromMode(this, "p1");
         results.push(newPlayer);
-        newPlayer = new xcalcTutorialPlayer(hjow_trans("AI") + " 2");
+        newPlayer = new XCalcTutorialPlayer(hjow_trans("AI") + " 2");
         newPlayer.setUniqueIdFromMode(this, "p2");
         results.push(newPlayer);
         return results;
     };
     ;
-    xcalcGameTutorial.prototype.init = function (playerCount) {
+    XCalcGameTutorial.prototype.init = function (playerCount) {
         this.totals = [];
     };
     ;
-    xcalcGameTutorial.prototype.getStartCardNumber = function () {
+    XCalcGameTutorial.prototype.getStartCardNumber = function () {
         return -1;
     };
     ;
-    xcalcGameTutorial.prototype.getEndCardNumber = function () {
+    XCalcGameTutorial.prototype.getEndCardNumber = function () {
         return 10;
     };
     ;
-    xcalcGameTutorial.prototype.playerInvList = function (player) {
+    XCalcGameTutorial.prototype.playerInvList = function (player) {
         var result = [];
         var playerUniq = player.getUniqueId();
         if (playerUniq == 'p0') {
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.op = '+';
             newCard.no = 3;
             result.push(newCard);
-            newCard = new xcalc();
+            newCard = new XCalc();
             newCard.op = '-';
             newCard.no = 3;
             result.push(newCard);
@@ -1848,49 +1853,49 @@ var xcalcGameTutorial = (function (_super) {
         return result;
     };
     ;
-    xcalcGameTutorial.prototype.deckList = function () {
+    XCalcGameTutorial.prototype.deckList = function () {
         var result = [];
         return result;
     };
     ;
-    xcalcGameTutorial.prototype.getEachPlayerTimeLimit = function (player, engine) {
+    XCalcGameTutorial.prototype.getEachPlayerTimeLimit = function (player, engine) {
         return 120;
     };
     ;
-    xcalcGameTutorial.prototype.getHideTime = function (player, engine) {
+    XCalcGameTutorial.prototype.getHideTime = function (player, engine) {
         if (player.isUserControllable())
             return 30;
         return 2;
     };
     ;
-    xcalcGameTutorial.prototype.needHide = function (player, engine) {
-        if (player instanceof xcalcAIPlayer)
+    XCalcGameTutorial.prototype.needHide = function (player, engine) {
+        if (player instanceof XCalcAIPlayer)
             return false;
         return true;
     };
     ;
-    xcalcGameTutorial.prototype.startGame = function (engine, players, deckObj) {
+    XCalcGameTutorial.prototype.startGame = function (engine, players, deckObj) {
         return true;
     };
     ;
-    xcalcGameTutorial.prototype.afterPrepareStartDefaultGame = function (engine, players, deckObj) {
+    XCalcGameTutorial.prototype.afterPrepareStartDefaultGame = function (engine, players, deckObj) {
         engine.setTurnIndex(0, this);
         var newPlayer = null;
         var newCardHaves = [];
         var newCard = null;
         newPlayer = players[0];
         newCardHaves = [];
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "＋";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 6;
         newCard.op = "－";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = -1;
         newCard.op = "×";
@@ -1898,52 +1903,52 @@ var xcalcGameTutorial = (function (_super) {
         newPlayer.setInventory(newCardHaves, engine);
         newPlayer = players[1];
         newCardHaves = [];
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 3;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 4;
         newCard.op = "×";
         newCardHaves.push(newCard);
         newPlayer.setInventory(newCardHaves, engine);
         newCardHaves = [];
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.no = 7;
         newCard.op = "×";
         newCardHaves.push(newCard);
         newPlayer.setApplied(newCardHaves, engine);
         newPlayer = players[2];
         newCardHaves = [];
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 3;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 4;
         newCard.op = "×";
         newCardHaves.push(newCard);
         newPlayer.setInventory(newCardHaves, engine);
         newCardHaves = [];
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.no = 6;
         newCard.op = "－";
         newCardHaves.push(newCard);
-        newCard = new xcalc();
+        newCard = new XCalc();
         newCard.no = 7;
         newCard.op = "－";
         newCardHaves.push(newCard);
@@ -1951,36 +1956,36 @@ var xcalcGameTutorial = (function (_super) {
         engine.setPauseTimeLimit(true, this);
     };
     ;
-    xcalcGameTutorial.prototype.beforeNextTurnWork = function (engine, players, deckObj, turnNumber) {
+    XCalcGameTutorial.prototype.beforeNextTurnWork = function (engine, players, deckObj, turnNumber) {
     };
     ;
-    xcalcGameTutorial.prototype.afterNextTurnWork = function (engine, players, deckObj, turnNumber) {
+    XCalcGameTutorial.prototype.afterNextTurnWork = function (engine, players, deckObj, turnNumber) {
     };
     ;
-    xcalcGameTutorial.prototype.onFinishGame = function (engine, players, deckObj) {
+    XCalcGameTutorial.prototype.onFinishGame = function (engine, players, deckObj) {
     };
     ;
-    xcalcGameTutorial.prototype.processPoint = function (player, beforeCalculated) {
+    XCalcGameTutorial.prototype.processPoint = function (player, beforeCalculated) {
         return beforeCalculated;
     };
     ;
-    xcalcGameTutorial.prototype.isReplayAllowed = function () {
+    XCalcGameTutorial.prototype.isReplayAllowed = function () {
         return false;
     };
     ;
-    return xcalcGameTutorial;
-}(xcalcGameSpeedMode));
+    return XCalcGameTutorial;
+}(XCalcGameSpeedMode));
 ;
 var hjow_xcalc_addGameMode = null;
 var hjow_xcalc_addPlayerType = null;
-var xcalcGameEngine = (function (_super) {
-    __extends(xcalcGameEngine, _super);
-    function xcalcGameEngine(plcArea, additionalRefreshFunction, debugMode) {
+var XCalcGameEngine = (function (_super) {
+    __extends(XCalcGameEngine, _super);
+    function XCalcGameEngine(plcArea, additionalRefreshFunction, debugMode) {
         if (plcArea === void 0) { plcArea = '.hjow_xcalc_style_place'; }
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
         var _this = _super.call(this, "X Card", "X Card Game Core Engine") || this;
-        _this.version = "0.0.6";
+        _this.version = "0.0.7";
         _this.placeArea = null;
         _this.gameModeList = [];
         _this.gameModeIndex = 0;
@@ -2024,15 +2029,15 @@ var xcalcGameEngine = (function (_super) {
         return _this;
     }
     ;
-    xcalcGameEngine.prototype.getClassName = function () {
-        return "xcalcGameEngine";
+    XCalcGameEngine.prototype.getClassName = function () {
+        return "XCalcGameEngine";
     };
     ;
-    xcalcGameEngine.prototype.getVersion = function () {
+    XCalcGameEngine.prototype.getVersion = function () {
         return this.version;
     };
     ;
-    xcalcGameEngine.prototype.init = function () {
+    XCalcGameEngine.prototype.init = function () {
         this.initEngine();
         this.initDom();
         this.applyPropertiesBefore();
@@ -2042,21 +2047,21 @@ var xcalcGameEngine = (function (_super) {
         return this;
     };
     ;
-    xcalcGameEngine.prototype.prepareFirstProp = function () {
+    XCalcGameEngine.prototype.prepareFirstProp = function () {
         this.deck = [];
         this.players = [];
         this.playerTypes = [];
-        this.playerTypes.push(new xcalcUserPlayerCreator());
-        this.playerTypes.push(new xcalcAIPlayerCreator());
-        this.playerTypes.push(new xcalcTutorialPlayerCreator());
-        this.players.push(new xcalcUserPlayer(hjow_trans("User")));
-        this.players.push(new xcalcAIPlayer("AI " + this.players.length));
-        this.players.push(new xcalcAIPlayer("AI " + this.players.length));
-        this.players.push(new xcalcAIPlayer("AI " + this.players.length));
-        this.gameModeList.push(new xcalcGameDefaultMode());
-        this.gameModeList.push(new xcalcGameSpeedMode());
-        this.gameModeList.push(new xcalcGameMultiplylessMode());
-        this.gameModeList.push(new xcalcGamePluslessMode());
+        this.playerTypes.push(new XCalcUserPlayerCreator());
+        this.playerTypes.push(new XCalcAIPlayerCreator());
+        this.playerTypes.push(new XCalcTutorialPlayerCreator());
+        this.players.push(new XCalcUserPlayer(hjow_trans("User")));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
+        this.gameModeList.push(new XCalcGameDefaultMode());
+        this.gameModeList.push(new XCalcGameSpeedMode());
+        this.gameModeList.push(new XCalcGameMultiplylessMode());
+        this.gameModeList.push(new XCalcGamePluslessMode());
         var selfObj = this;
         if (hjow_xcalc_addGameMode != null) {
             hjow_xcalc_addGameMode = function (gameMode) {
@@ -2097,19 +2102,19 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.applyProperties = function () {
+    XCalcGameEngine.prototype.applyProperties = function () {
         this.applyPropertiesBefore();
         this.applyPropertiesAfter();
     };
     ;
-    xcalcGameEngine.prototype.applyPropertiesBefore = function () {
+    XCalcGameEngine.prototype.applyPropertiesBefore = function () {
         var customLocale = this.getProperty("locale");
         if (customLocale != null && customLocale != '') {
             hjow_selectedLocale = customLocale;
         }
     };
     ;
-    xcalcGameEngine.prototype.applyPropertiesAfter = function () {
+    XCalcGameEngine.prototype.applyPropertiesAfter = function () {
         var useAdvanceFeatOpt = this.getProperty("use_advanced_features");
         if (useAdvanceFeatOpt != null) {
             if (hjow_parseBoolean(useAdvanceFeatOpt))
@@ -2123,11 +2128,11 @@ var xcalcGameEngine = (function (_super) {
         this.prepareHowToPlayDialog();
     };
     ;
-    xcalcGameEngine.prototype.getPlaceArea = function () {
+    XCalcGameEngine.prototype.getPlaceArea = function () {
         return jq(this.placeArea);
     };
     ;
-    xcalcGameEngine.prototype.initEngine = function () {
+    XCalcGameEngine.prototype.initEngine = function () {
         this.prepareLanguageSets();
         this.setProperty('localStorageAvailable', String(hjow_checkLocalStorageAvailable()));
         this.load();
@@ -2136,7 +2141,7 @@ var xcalcGameEngine = (function (_super) {
         this.prepareFirstProp();
     };
     ;
-    xcalcGameEngine.prototype.initDom = function () {
+    XCalcGameEngine.prototype.initDom = function () {
         jq(this.placeArea).addClass('hjow_xcalc_style_place');
         var bodyHtml = "<div class='page page_main section'></div>\n";
         bodyHtml += "<div class='page page_game section'></div>\n";
@@ -2156,7 +2161,7 @@ var xcalcGameEngine = (function (_super) {
         this.refreshPage();
     };
     ;
-    xcalcGameEngine.prototype.initTheme = function (themeType, atFirst) {
+    XCalcGameEngine.prototype.initTheme = function (themeType, atFirst) {
         if (themeType === void 0) { themeType = 0; }
         if (atFirst === void 0) { atFirst = false; }
         if (themeType == 0) {
@@ -2209,51 +2214,51 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.getSelectedGameMode = function () {
+    XCalcGameEngine.prototype.getSelectedGameMode = function () {
         return this.gameModeList[this.gameModeIndex];
     };
     ;
-    xcalcGameEngine.prototype.getPlayerNowTurn = function () {
+    XCalcGameEngine.prototype.getPlayerNowTurn = function () {
         return this.players[this.turnPlayerIndex];
     };
     ;
-    xcalcGameEngine.prototype.isGameOn = function () {
+    XCalcGameEngine.prototype.isGameOn = function () {
         return this.gameStarted;
     };
     ;
-    xcalcGameEngine.prototype.clearAllPlayers = function () {
+    XCalcGameEngine.prototype.clearAllPlayers = function () {
         for (var idx = 0; idx < this.players.length; idx++) {
             this.players[idx].resetCards();
         }
     };
     ;
-    xcalcGameEngine.prototype.setTurnIndex = function (turnPlayerIndex, mode) {
+    XCalcGameEngine.prototype.setTurnIndex = function (turnPlayerIndex, mode) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         if (mode.getUniqueId() != this.getSelectedGameMode().getUniqueId())
             return;
         this.turnPlayerIndex = turnPlayerIndex;
     };
     ;
-    xcalcGameEngine.prototype.setTurnTime = function (turnPlayerTime, mode) {
+    XCalcGameEngine.prototype.setTurnTime = function (turnPlayerTime, mode) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         if (mode.getUniqueId() != this.getSelectedGameMode().getUniqueId())
             return;
         this.turnPlayerTime = turnPlayerTime;
     };
     ;
-    xcalcGameEngine.prototype.title = function () {
+    XCalcGameEngine.prototype.title = function () {
         this.gameStarted = false;
         this.clearAllPlayers();
         this.refreshPage();
     };
     ;
-    xcalcGameEngine.prototype.startGame = function () {
+    XCalcGameEngine.prototype.startGame = function () {
         this.applyInputs();
         hjow_log(hjow_trans("The game is preparing to start."));
         var gameMode = this.getSelectedGameMode();
@@ -2335,18 +2340,18 @@ var xcalcGameEngine = (function (_super) {
         this.actPlayerTurnRequest = true;
     };
     ;
-    xcalcGameEngine.prototype.setPauseTimeLimit = function (pause, mode) {
+    XCalcGameEngine.prototype.setPauseTimeLimit = function (pause, mode) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId())
             return;
         this.pauseTimeLimit = pause;
     };
     ;
-    xcalcGameEngine.prototype.prepareRecordingReplay = function () {
-        this.replay = new xcalcReplay();
+    XCalcGameEngine.prototype.prepareRecordingReplay = function () {
+        this.replay = new XCalcReplay();
         this.replay.players = [];
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             var plainObj = this.players[pdx].toPlainObject(this);
@@ -2368,7 +2373,7 @@ var xcalcGameEngine = (function (_super) {
         this.replay.deck = [];
         for (var cdx = 0; cdx < this.deck.length; cdx++) {
             var newCardObj = this.deck[cdx].toPlainObjectDetail(this);
-            var newCard = new xcalc();
+            var newCard = new XCalc();
             newCard.no = newCardObj.no;
             newCard.op = newCardObj.op;
             newCard.setUniqueId(this, newCardObj.uniqueId);
@@ -2376,44 +2381,44 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.isActPlayerRequestAlive = function () {
+    XCalcGameEngine.prototype.isActPlayerRequestAlive = function () {
         return this.actPlayerTurnRequest && (!this.actPlayerTurnStopRequest);
     };
     ;
-    xcalcGameEngine.prototype.isActPlayerStopRequested = function () {
+    XCalcGameEngine.prototype.isActPlayerStopRequested = function () {
         return this.actPlayerTurnStopRequest;
     };
     ;
-    xcalcGameEngine.prototype.isThisTurn = function (player) {
+    XCalcGameEngine.prototype.isThisTurn = function (player) {
         if (this.getPlayerNowTurn().getUniqueId() == player.getUniqueId())
             return true;
         return false;
     };
     ;
-    xcalcGameEngine.prototype.getLeftTime = function () {
+    XCalcGameEngine.prototype.getLeftTime = function () {
         return this.turnPlayerTime;
     };
-    xcalcGameEngine.prototype.isHided = function () {
+    XCalcGameEngine.prototype.isHided = function () {
         return this.needHideScreen;
     };
     ;
-    xcalcGameEngine.prototype.setDeck = function (cards, mode) {
+    XCalcGameEngine.prototype.setDeck = function (cards, mode) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId())
             return;
         this.deck = cards;
     };
     ;
-    xcalcGameEngine.prototype.addTimer = function (name, desc, func, timeGap) {
+    XCalcGameEngine.prototype.addTimer = function (name, desc, func, timeGap) {
         if (timeGap === void 0) { timeGap = 1000; }
         var newTimer = new IntervalTimer(name, desc, func, timeGap);
         this.timers.push(newTimer);
     };
     ;
-    xcalcGameEngine.prototype.addTimerIfNotExistName = function (name, desc, func, timeGap) {
+    XCalcGameEngine.prototype.addTimerIfNotExistName = function (name, desc, func, timeGap) {
         if (timeGap === void 0) { timeGap = 1000; }
         for (var idx = 0; idx < this.timers.length; idx++) {
             if (this.timers[idx].getName() == name)
@@ -2423,7 +2428,7 @@ var xcalcGameEngine = (function (_super) {
         return true;
     };
     ;
-    xcalcGameEngine.prototype.stopAllTimer = function () {
+    XCalcGameEngine.prototype.stopAllTimer = function () {
         var curIdx = 0;
         var preventInfLoop = 0;
         while (curIdx < this.timers.length) {
@@ -2443,7 +2448,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.stopTimer = function (timerName) {
+    XCalcGameEngine.prototype.stopTimer = function (timerName) {
         for (var idx = 0; idx < this.timers.length; idx++) {
             var timerOne = this.timers[idx];
             if (timerOne.getName() == timerName) {
@@ -2455,7 +2460,7 @@ var xcalcGameEngine = (function (_super) {
         return false;
     };
     ;
-    xcalcGameEngine.prototype.spreadCards = function () {
+    XCalcGameEngine.prototype.spreadCards = function () {
         var gameMode = this.getSelectedGameMode();
         gameMode.init(this.players.length);
         for (var idx = 0; idx < this.players.length; idx++) {
@@ -2466,17 +2471,17 @@ var xcalcGameEngine = (function (_super) {
         this.deck = gameMode.deckList();
     };
     ;
-    xcalcGameEngine.prototype.save = function () {
+    XCalcGameEngine.prototype.save = function () {
         try {
-            hjow_saveOnLocalStorage('xcalc', this.properties.serialize());
+            hjow_saveOnLocalStorage('XCalc', this.properties.serialize());
         }
         catch (e) {
             hjow_alert(e, hjow_trans('Error'));
         }
     };
     ;
-    xcalcGameEngine.prototype.load = function () {
-        var localStoreStr = hjow_getOnLocalStorage('xcalc');
+    XCalcGameEngine.prototype.load = function () {
+        var localStoreStr = hjow_getOnLocalStorage('XCalc');
         if (localStoreStr == null) {
             this.save();
         }
@@ -2488,7 +2493,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.findPlayer = function (uniqueId) {
+    XCalcGameEngine.prototype.findPlayer = function (uniqueId) {
         for (var idx = 0; idx < this.players.length; idx++) {
             if (this.players[idx].getUniqueId() == uniqueId) {
                 return this.players[idx];
@@ -2497,7 +2502,7 @@ var xcalcGameEngine = (function (_super) {
         return null;
     };
     ;
-    xcalcGameEngine.prototype.nextTurn = function () {
+    XCalcGameEngine.prototype.nextTurn = function () {
         this.turnChanging = true;
         this.actPlayerTurnStopRequest = true;
         var gameMode = this.getSelectedGameMode();
@@ -2537,7 +2542,7 @@ var xcalcGameEngine = (function (_super) {
         this.refreshPage(false);
     };
     ;
-    xcalcGameEngine.prototype.checkFinishGameCondition = function () {
+    XCalcGameEngine.prototype.checkFinishGameCondition = function () {
         if (this.deck.length <= 0)
             return hjow_trans("The deck is empty.");
         for (var idx = 0; idx < this.players.length; idx++) {
@@ -2548,10 +2553,10 @@ var xcalcGameEngine = (function (_super) {
         return null;
     };
     ;
-    xcalcGameEngine.prototype.finishGameFromMode = function (reason, mode) {
+    XCalcGameEngine.prototype.finishGameFromMode = function (reason, mode) {
         if (mode == null)
             return;
-        if (!(mode instanceof xcalcGameMode))
+        if (!(mode instanceof XCalcGameMode))
             return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId())
             return;
@@ -2559,7 +2564,7 @@ var xcalcGameEngine = (function (_super) {
         this.finishGame(true);
     };
     ;
-    xcalcGameEngine.prototype.finishGame = function (normalReason) {
+    XCalcGameEngine.prototype.finishGame = function (normalReason) {
         if (normalReason === void 0) { normalReason = false; }
         this.actPlayerTurnStopRequest = true;
         this.gameStarted = false;
@@ -2577,11 +2582,11 @@ var xcalcGameEngine = (function (_super) {
         this.resultReason = null;
     };
     ;
-    xcalcGameEngine.prototype.isDebugMode = function () {
+    XCalcGameEngine.prototype.isDebugMode = function () {
         return this.debugMode;
     };
     ;
-    xcalcGameEngine.prototype.refreshPage = function (heavyRefresh) {
+    XCalcGameEngine.prototype.refreshPage = function (heavyRefresh) {
         if (heavyRefresh === void 0) { heavyRefresh = true; }
         this.applyInputs();
         if (hjow_getPlatform() == 'android' || hjow_getPlatform() == 'browser' || hjow_getPlatform() == 'windowsuniversal') {
@@ -2654,7 +2659,7 @@ var xcalcGameEngine = (function (_super) {
             this.addiRefFunc(heavyRefresh);
     };
     ;
-    xcalcGameEngine.prototype.refreshMain = function () {
+    XCalcGameEngine.prototype.refreshMain = function () {
         jq(this.placeArea).find('.td_player_list').empty();
         var results = "";
         results += "<div class='full player_list_div element e137'>" + "\n";
@@ -2724,7 +2729,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.refreshMainGameMode = function (onRecursives) {
+    XCalcGameEngine.prototype.refreshMainGameMode = function (onRecursives) {
         if (onRecursives === void 0) { onRecursives = false; }
         var gameMode = this.getSelectedGameMode();
         jq(this.placeArea).find('.div_game_mode_desc').text(hjow_trans(gameMode.getDescription()));
@@ -2766,7 +2771,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.refreshGame = function () {
+    XCalcGameEngine.prototype.refreshGame = function () {
         jq(this.placeArea).find('.table_player_arena_each').removeClass('current_turn');
         var currentPlayer = this.getPlayerNowTurn();
         if (currentPlayer.isUserControllable()) {
@@ -2914,7 +2919,7 @@ var xcalcGameEngine = (function (_super) {
         }, parseInt(selfObj.getProperty('screen_apply_speed')));
     };
     ;
-    xcalcGameEngine.prototype.refreshGameAfterTime = function () {
+    XCalcGameEngine.prototype.refreshGameAfterTime = function () {
         var heightVal = jq(this.placeArea).height() - 20;
         if (heightVal < 500)
             heightVal = 500;
@@ -2962,7 +2967,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.refreshResult = function () {
+    XCalcGameEngine.prototype.refreshResult = function () {
         var gameMode = this.getSelectedGameMode();
         jq(this.placeArea).find('.replay_result').hide();
         var finResultLb = jq(this.placeArea).find('.lb_finish_result');
@@ -2989,7 +2994,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.refreshSettingPage = function () {
+    XCalcGameEngine.prototype.refreshSettingPage = function () {
         var settingPage = jq(this.placeArea).find('.page_set');
         var recordReplayOpt = this.getProperty('record_replay');
         if (recordReplayOpt == null)
@@ -3081,37 +3086,39 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.resultReplay = function () {
+    XCalcGameEngine.prototype.resultReplay = function () {
         this.replay.debugModeUsed = this.debugMode;
         var results = this.replay.toPlainObjectDetail(this);
         jq(this.placeArea).find('.replay_json').val(JSON.stringify(results));
         jq(this.placeArea).find('.btn_show_replay').show();
     };
     ;
-    xcalcGameEngine.prototype.mainPageHTML = function () {
+    XCalcGameEngine.prototype.mainPageHTML = function () {
         var results = "";
         results += "<table class='element e001 full layout'>" + "\n";
         results += "  <tr class='element e002'>" + "\n";
-        results += "     <td class='element e003 td_game_title'>" + "\n";
+        results += "     <td class='element e003 td_game_title' colspan='2'>" + "\n";
         results += "        <h2 class='element e004'>" + hjow_serializeXMLString(hjow_trans("X Card")) + "</h2>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "  <tr class='element e005'>" + "\n";
-        results += "     <td class='element e006 td_player_list'>" + "\n";
+        results += "     <td class='element e006 td_player_list' colspan='2'>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "  <tr class='element e006'>" + "\n";
-        results += "     <td class='element e007 td_game_start' style='height: 25px;'>" + "\n";
+        results += "     <td class='element e007 td_game_below td_game_start'>" + "\n";
         results += "        <select class='element e008 sel_game_mode'></select>" + "\n";
         results += "        <button type='button' class='element e009 btn_game_start'>" + hjow_serializeXMLString(hjow_trans("Start Game")) + "</button>" + "\n";
         results += "        <div class='element e010 div_game_mode_desc'></div>" + "\n";
+        results += "     </td>" + "\n";
+        results += "     <td class='element e163 td_game_below td_game_ads' style='width: 250px;'>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "</table>" + "\n";
         return results;
     };
     ;
-    xcalcGameEngine.prototype.setPageHTML = function () {
+    XCalcGameEngine.prototype.setPageHTML = function () {
         var results = "";
         results += "<div class='element setting_list e011'>" + "\n";
         results += "<div class='element setting_element e012'>" + "\n";
@@ -3185,7 +3192,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.gamePageHTML = function () {
+    XCalcGameEngine.prototype.gamePageHTML = function () {
         var results = "";
         results += "<table class='element e036 full layout'>" + "\n";
         results += "   <tr class='element e037'>" + "\n";
@@ -3213,7 +3220,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.hidePageHTML = function () {
+    XCalcGameEngine.prototype.hidePageHTML = function () {
         var results = "";
         results += "<table class='element e050 full layout'>" + "\n";
         results += "   <tr class='element e051'>" + "\n";
@@ -3230,7 +3237,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.resultPageHTML = function () {
+    XCalcGameEngine.prototype.resultPageHTML = function () {
         var gameMode = this.getSelectedGameMode();
         var results = "";
         results += "<table class='element e057 full layout'>" + "\n";
@@ -3304,7 +3311,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.eachPlayerMainHTML = function (player) {
+    XCalcGameEngine.prototype.eachPlayerMainHTML = function (player) {
         var results = "";
         results += "<table class='full player_each element e089'>" + "\n";
         results += "   <colgroup>" + "\n";
@@ -3342,7 +3349,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.eachPlayerGameHTML = function (player) {
+    XCalcGameEngine.prototype.eachPlayerGameHTML = function (player) {
         var results = player.customGameHTML();
         if (results == null || results == "") {
             results = "<div class='element e103 div_player_arena_each pdiv_" + hjow_serializeString(player.getUniqueId()) + "'>";
@@ -3389,7 +3396,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.toolbarHTML = function () {
+    XCalcGameEngine.prototype.toolbarHTML = function () {
         var results = "";
         results += "<div class='element e127 toolbar_element left toolbar_buttons'>";
         if (this.gameStarted) {
@@ -3419,7 +3426,7 @@ var xcalcGameEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcGameEngine.prototype.applyInputs = function () {
+    XCalcGameEngine.prototype.applyInputs = function () {
         if (this.gameStarted)
             return;
         if (this.needHideScreen)
@@ -3443,7 +3450,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.applySettings = function () {
+    XCalcGameEngine.prototype.applySettings = function () {
         var settingPage = jq(this.placeArea).find(".page_set");
         var recordRepComp = settingPage.find('.chk_record_replay');
         if (recordRepComp.is(':checked')) {
@@ -3511,7 +3518,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.payHere = function (targetPlayerUniqueId, cardUniqueId) {
+    XCalcGameEngine.prototype.payHere = function (targetPlayerUniqueId, cardUniqueId) {
         var player = this.getPlayerNowTurn();
         var targetPlayer = this.findPlayer(targetPlayerUniqueId);
         var errMsg = targetPlayer.canPayByUniqId(cardUniqueId, player);
@@ -3534,9 +3541,9 @@ var xcalcGameEngine = (function (_super) {
         }
         if (this.replay != null) {
             try {
-                var action = new xcalcReplayAction();
+                var action = new XCalcReplayAction();
                 var plainObj = targetCard.toPlainObjectDetail(this);
-                var cloned = new xcalc();
+                var cloned = new XCalc();
                 cloned.no = plainObj.no;
                 cloned.op = plainObj.op;
                 cloned.setUniqueId(this, plainObj.uniqueId);
@@ -3556,7 +3563,7 @@ var xcalcGameEngine = (function (_super) {
         return null;
     };
     ;
-    xcalcGameEngine.prototype.removeButtonEvent = function (btnObj) {
+    XCalcGameEngine.prototype.removeButtonEvent = function (btnObj) {
         var buttonOne = jq(btnObj);
         if (buttonOne.length >= 1) {
             try {
@@ -3567,7 +3574,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.removeSelectEvent = function (selObj) {
+    XCalcGameEngine.prototype.removeSelectEvent = function (selObj) {
         var selOne = jq(selObj);
         if (selOne.length >= 1) {
             try {
@@ -3578,7 +3585,7 @@ var xcalcGameEngine = (function (_super) {
         }
     };
     ;
-    xcalcGameEngine.prototype.reAllocateButtonEvent = function (btnObj, actFunc) {
+    XCalcGameEngine.prototype.reAllocateButtonEvent = function (btnObj, actFunc) {
         var buttonOne = jq(btnObj);
         if (buttonOne.length >= 1) {
             this.removeButtonEvent(buttonOne);
@@ -3590,7 +3597,7 @@ var xcalcGameEngine = (function (_super) {
         return buttonOne;
     };
     ;
-    xcalcGameEngine.prototype.reAllocateSelectEvent = function (selObj, actFunc) {
+    XCalcGameEngine.prototype.reAllocateSelectEvent = function (selObj, actFunc) {
         var selOne = jq(selObj);
         if (selOne.length >= 1) {
             this.removeSelectEvent(selOne);
@@ -3602,7 +3609,7 @@ var xcalcGameEngine = (function (_super) {
         return selOne;
     };
     ;
-    xcalcGameEngine.prototype.refreshEvents = function () {
+    XCalcGameEngine.prototype.refreshEvents = function () {
         var selfObj = this;
         var selfAny = this.getSelfObject();
         var pageArea = jq(this.placeArea);
@@ -3665,7 +3672,7 @@ var xcalcGameEngine = (function (_super) {
         });
     };
     ;
-    xcalcGameEngine.prototype.prepareEvents = function () {
+    XCalcGameEngine.prototype.prepareEvents = function () {
         var selfObj = this;
         var selfAny = this.getSelfObject();
         selfAny.events = {};
@@ -3741,7 +3748,7 @@ var xcalcGameEngine = (function (_super) {
             player.addOneOnInventory(card, selfObj);
             if (selfObj.replay != null) {
                 try {
-                    var action = new xcalcReplayAction();
+                    var action = new XCalcReplayAction();
                     action.card = null;
                     action.actionPlayerIndex = selfObj.turnPlayerIndex;
                     action.payTargetPlayerIndex = -1;
@@ -3797,24 +3804,21 @@ var xcalcGameEngine = (function (_super) {
         };
     };
     ;
-    xcalcGameEngine.prototype.getDefaultTheme = function (themeType) {
+    XCalcGameEngine.prototype.getDefaultTheme = function (themeType) {
         var themeArr = [];
         var themeOne = {};
         return JSON.stringify(themeArr);
     };
     ;
-    xcalcGameEngine.prototype.makeThemeElementObject = function (selector, value) {
+    XCalcGameEngine.prototype.makeThemeElementObject = function (selector, value) {
         var themeOne = {};
         themeOne[this.placeArea + ' ' + selector] = value;
         return themeOne;
     };
     ;
-    xcalcGameEngine.prototype.prepareHowToPlayDialog = function () {
+    XCalcGameEngine.prototype.prepareHowToPlayDialog = function () {
         var dialogObj = jq('.hjow_xcalc_how_to_play_dialog');
         var htmls = "";
-        htmls += "<p>";
-        htmls += "<img src='" + hjow_getCurrentLanguageSet().getImgPath() + "layout.png" + "' style='width: 100%;'/>" + "\n";
-        htmls += "</p>";
         htmls += "<p>";
         htmls += hjow_replaceBr(hjow_trans("There must be at least two players, and there is no maximum limit, but it is recommended that four players play. Support play with simple AI computer.")) + "\n";
         htmls += "</p>";
@@ -3855,22 +3859,25 @@ var xcalcGameEngine = (function (_super) {
         htmls += hjow_replaceBr(hjow_trans("The player with the highest score wins.")) + "\n";
         htmls += "</p>";
         htmls += "<p>";
+        htmls += "<img src='" + hjow_getCurrentLanguageSet().getImgPath() + "layout.png" + "' style='width: 100%;'/>" + "\n";
+        htmls += "</p>";
+        htmls += "<p>";
         htmls += hjow_replaceBr(hjow_replaceStr(hjow_trans("Please visit [[URL]] to get more."), "[[URL]]", "<a href='https://github.com/HJOW/X-Card/blob/master/README.md' target='blank'>https://github.com/HJOW/X-Card/blob/master/README.md</a>")) + "\n";
         htmls += "</p>";
         dialogObj.html(htmls);
     };
     ;
-    xcalcGameEngine.prototype.showHowToPlayDialog = function () {
+    XCalcGameEngine.prototype.showHowToPlayDialog = function () {
         var dialogObj = jq('.hjow_xcalc_how_to_play_dialog');
         if (dialogObj.length <= 0)
             return;
         dialogObj.dialog({
             width: 780,
-            height: 550
+            height: 570
         });
     };
     ;
-    xcalcGameEngine.prototype.prepareLanguageSets = function () {
+    XCalcGameEngine.prototype.prepareLanguageSets = function () {
         var newLangSet = null;
         newLangSet = new LanguageSet();
         newLangSet.locale = "en";
@@ -3998,12 +4005,12 @@ var xcalcGameEngine = (function (_super) {
         hjow_languageSets.push(newLangSet);
     };
     ;
-    return xcalcGameEngine;
+    return XCalcGameEngine;
 }(ModuleObject));
 ;
-var xcalcReplayEngine = (function (_super) {
-    __extends(xcalcReplayEngine, _super);
-    function xcalcReplayEngine(plcArea, additionalRefreshFunction, debugMode) {
+var XCalcReplayEngine = (function (_super) {
+    __extends(XCalcReplayEngine, _super);
+    function XCalcReplayEngine(plcArea, additionalRefreshFunction, debugMode) {
         if (plcArea === void 0) { plcArea = '.hjow_xcalc_style_place'; }
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
@@ -4016,7 +4023,7 @@ var xcalcReplayEngine = (function (_super) {
         return _this;
     }
     ;
-    xcalcReplayEngine.prototype.mainPageHTML = function () {
+    XCalcReplayEngine.prototype.mainPageHTML = function () {
         var results = "";
         results += "<table class='element e001 full layout'>" + "\n";
         results += "  <tr class='element e002'>" + "\n";
@@ -4037,7 +4044,7 @@ var xcalcReplayEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcReplayEngine.prototype.refreshMain = function () {
+    XCalcReplayEngine.prototype.refreshMain = function () {
         jq(this.placeArea).find('.td_player_list').empty();
         var results = "<textarea class='full tx_replay_code'></textarea>";
         jq(this.placeArea).find('.td_player_list').html(hjow_toStaticHTML(results));
@@ -4045,7 +4052,7 @@ var xcalcReplayEngine = (function (_super) {
         this.refreshMainGameMode(true);
     };
     ;
-    xcalcReplayEngine.prototype.toolbarHTML = function () {
+    XCalcReplayEngine.prototype.toolbarHTML = function () {
         var results = "";
         results += "<div class='element e127 toolbar_element left toolbar_buttons'>";
         if (this.gameStarted) {
@@ -4069,17 +4076,17 @@ var xcalcReplayEngine = (function (_super) {
         return results;
     };
     ;
-    xcalcReplayEngine.prototype.getThisTurnAction = function () {
+    XCalcReplayEngine.prototype.getThisTurnAction = function () {
         return this.actions[this.turnNumber];
     };
     ;
-    xcalcReplayEngine.prototype.getLastTurnAction = function () {
+    XCalcReplayEngine.prototype.getLastTurnAction = function () {
         if (this.turnNumber == 0)
             return null;
         return this.actions[this.turnNumber - 1];
     };
     ;
-    xcalcReplayEngine.prototype.prepareEvents = function () {
+    XCalcReplayEngine.prototype.prepareEvents = function () {
         _super.prototype.prepareEvents.call(this);
         var selfObj = this;
         var selfAny = this.getSelfObject();
@@ -4107,7 +4114,7 @@ var xcalcReplayEngine = (function (_super) {
         };
     };
     ;
-    xcalcReplayEngine.prototype.onTurnChangedBefore = function (focusPlayerIndex) {
+    XCalcReplayEngine.prototype.onTurnChangedBefore = function (focusPlayerIndex) {
         var action = this.getLastTurnAction();
         var player = this.players[focusPlayerIndex];
         if (action.payTargetPlayerIndex < 0 || action.card == null) {
@@ -4121,7 +4128,7 @@ var xcalcReplayEngine = (function (_super) {
         }
     };
     ;
-    xcalcReplayEngine.prototype.onTurnChangedAfter = function () {
+    XCalcReplayEngine.prototype.onTurnChangedAfter = function () {
         hjow_log(hjow_replaceStr(hjow_replaceStr(hjow_trans("Turn [[TURN]], [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()), "[[TURN]]", String((this.turnNumber + 1))));
         var action = this.getThisTurnAction();
         if (action.payTargetPlayerIndex < 0 || action.card == null) {
@@ -4133,7 +4140,7 @@ var xcalcReplayEngine = (function (_super) {
         }
     };
     ;
-    xcalcReplayEngine.prototype.refreshEvents = function () {
+    XCalcReplayEngine.prototype.refreshEvents = function () {
         _super.prototype.refreshEvents.call(this);
         var selfObj = this;
         var selfAny = this.getSelfObject();
@@ -4143,7 +4150,7 @@ var xcalcReplayEngine = (function (_super) {
         });
     };
     ;
-    xcalcReplayEngine.prototype.startGame = function () {
+    XCalcReplayEngine.prototype.startGame = function () {
         try {
             var jsonContent = jq(this.placeArea).find('.tx_replay_code').val();
             if (jsonContent == null || jsonContent.trim() == '') {
@@ -4156,7 +4163,7 @@ var xcalcReplayEngine = (function (_super) {
             this.recordedDate = hjow_string_to_date(jsonObj.date);
             this.deck = [];
             for (var ddx = 0; ddx < jsonObj.deck.length; ddx++) {
-                var newCard = new xcalc();
+                var newCard = new XCalc();
                 newCard.op = jsonObj.deck[ddx].op;
                 newCard.no = jsonObj.deck[ddx].no;
                 newCard.setUniqueId(this, jsonObj.deck[ddx].uniqueId);
@@ -4191,12 +4198,12 @@ var xcalcReplayEngine = (function (_super) {
             this.actions = [];
             for (var adx = 0; adx < jsonObj.actions.length; adx++) {
                 var actionObj = jsonObj.actions[adx];
-                var actionOne = new xcalcReplayAction();
+                var actionOne = new XCalcReplayAction();
                 if (actionObj.card == null) {
                     actionOne.card = null;
                 }
                 else {
-                    var targetCard = new xcalc();
+                    var targetCard = new XCalc();
                     targetCard.op = actionObj.card.op;
                     targetCard.no = actionObj.card.no;
                     targetCard.setUniqueId(this, actionObj.card.uniqueId);
@@ -4228,7 +4235,7 @@ var xcalcReplayEngine = (function (_super) {
         jq(this.placeArea).find('.page_game .btn_next').show();
     };
     ;
-    xcalcReplayEngine.prototype.refreshGameAfterTime = function () {
+    XCalcReplayEngine.prototype.refreshGameAfterTime = function () {
         _super.prototype.refreshGameAfterTime.call(this);
         var gameArea = jq(this.placeArea).find('.page_game');
         gameArea.find('.selalter_option.concealed').hide();
@@ -4260,7 +4267,7 @@ var xcalcReplayEngine = (function (_super) {
         }
     };
     ;
-    xcalcReplayEngine.prototype.refreshPage = function (heavyRefresh) {
+    XCalcReplayEngine.prototype.refreshPage = function (heavyRefresh) {
         if (heavyRefresh === void 0) { heavyRefresh = true; }
         _super.prototype.refreshPage.call(this, heavyRefresh);
         var gameArea = jq(this.placeArea).find('.page_game');
@@ -4275,7 +4282,7 @@ var xcalcReplayEngine = (function (_super) {
         }
     };
     ;
-    return xcalcReplayEngine;
-}(xcalcGameEngine));
+    return XCalcReplayEngine;
+}(XCalcGameEngine));
 ;
 //# sourceMappingURL=xcalc.js.map

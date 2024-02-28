@@ -1,6 +1,6 @@
 {
   "compileOnSave": true,
-  "files": [ "WebContent/js/hjow_common.js", "WebContent/js/xcalc.ts", "WebContent/js/xcalc_userplay.ts", "WebContent/js/not_opened.ts" ],
+  "files": [ "WebContent/ts/hjow_common.js", "WebContent/ts/xcalc.ts", "WebContent/ts/xcalc_userplay.ts", "WebContent/ts/not_opened.ts" ],
   "compilerOptions": {
     "noImplicitAny": false,
     "noEmitOnError": true,
