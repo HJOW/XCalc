@@ -1,8 +1,8 @@
 ﻿
 /*
 This source is made by HJOW (hujinone22@naver.com)
-This source should be imported after 'xcard.js' file is imported.
-이 소스는 'xcard.js' 보다 나중에 삽입되어야 합니다.
+This source should be imported after 'xcalc.js' file is imported.
+이 소스는 'xcalc.js' 보다 나중에 삽입되어야 합니다.
 */
 var hjow_processSecurityProcess = function (engineObject) {
     // The code not opened will be placed here

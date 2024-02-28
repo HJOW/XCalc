@@ -196,11 +196,11 @@ class TBigInt extends UtilityMethods {
     }
 }
 
-class XCardReplayAction extends UtilityMethods {
+class XCalcReplayAction extends UtilityMethods {
     public date: Date = null;
     public actionPlayerIndex: number = 0;
     public payTargetPlayerIndex: number = -1; // -1 : get one card from deck
-    public card: XCard = null; // pay target
+    public card: XCalc = null; // pay target
     public toPlainObject(): any {
         return {
             date: hjow_date_to_string(this.date),
@@ -209,26 +209,26 @@ class XCardReplayAction extends UtilityMethods {
             card: this.card
         };
     }
-    public toPlainObjectDetail(engine: XCardGameEngine): any {
+    public toPlainObjectDetail(engine: XCalcGameEngine): any {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         var results = this.toPlainObject();
         if(this.card != null) results.card = this.card.toPlainObjectDetail(engine);
         return results;
     }
 };
 
-class XCardReplay extends UtilityMethods {
+class XCalcReplay extends UtilityMethods {
     public date: Date = new Date();
-    public actions: XCardReplayAction[] = [];
-    public players: XCardPlayer[] = []; // should be first states
-    public deck: XCard[] = []; // should be first states
+    public actions: XCalcReplayAction[] = [];
+    public players: XCalcPlayer[] = []; // should be first states
+    public deck: XCalc[] = []; // should be first states
     public gameMode: string = null;
     public reason: string = null;
     public debugModeUsed: boolean = false;
-    public toPlainObjectDetail(engine: XCardGameEngine): any {
+    public toPlainObjectDetail(engine: XCalcGameEngine): any {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
 
         var actionPlains: any = [];
         for (var adx = 0; adx < this.actions.length; adx++) {
@@ -257,7 +257,7 @@ class XCardReplay extends UtilityMethods {
     };
 };
 
-class XCardAIProcessAction extends XCardReplayAction {
+class XCalcAIProcessAction extends XCalcReplayAction {
     public calculatedAIPoint: TBigInt = null;
 }
 
@@ -391,7 +391,7 @@ class ImportantTimer extends IntervalTimer {
     };
 };
 
-class XCard extends Uniqueable {
+class XCalc extends Uniqueable {
     public no: number = 0;
     public op: string = '';
     public apply(beforeVal: TBigInt): TBigInt {
@@ -405,8 +405,8 @@ class XCard extends Uniqueable {
 
         return beforeVal;
     }
-    public clone(): XCard {
-        var newOne:XCard = new XCard();
+    public clone(): XCalc {
+        var newOne:XCalc = new XCalc();
         newOne.no = this.no;
         newOne.op = this.op;
         return newOne;
@@ -430,52 +430,52 @@ class XCard extends Uniqueable {
         };
         return result;
     }
-    public toPlainObjectDetail(engine: XCardGameEngine): any {
+    public toPlainObjectDetail(engine: XCalcGameEngine): any {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         var result = this.toPlainObject();
         result.uniqueId = this.uniqueId;
         return result;
     }
-    public setUniqueId(engine: XCardGameEngine, uniqueId: string) {
+    public setUniqueId(engine: XCalcGameEngine, uniqueId: string) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.uniqueId = uniqueId;
     }
 };
 
-class XCardPlayer extends Uniqueable {
+class XCalcPlayer extends Uniqueable {
     private name: string = "";
-    protected inventory: XCard[] = [];
-    protected applied: XCard[] = [];
+    protected inventory: XCalc[] = [];
+    protected applied: XCalc[] = [];
 
     constructor(name: string) {
         super();
         this.name = name;
     };
     public getClassName(): string {
-        return "XCardPlayer";
+        return "XCalcPlayer";
     };
     public getName(): string {
         return this.name;
     };
-    public setInventory(cardList: XCard[], engine: XCardGameEngine) {
+    public setInventory(cardList: XCalc[], engine: XCalcGameEngine) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.inventory = cardList;
     };
-    public setApplied(cardList: XCard[], engine: XCardGameEngine) {
+    public setApplied(cardList: XCalc[], engine: XCalcGameEngine) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.applied = cardList;
     };
-    public lastAppliedCard(): XCard {
+    public lastAppliedCard(): XCalc {
         if (this.applied.length == 0) return null;
         return this.applied[this.applied.length - 1];
     };
-    public findInventoryCard(engine: XCardGameEngine, cardUniqId: string): XCard {
+    public findInventoryCard(engine: XCalcGameEngine, cardUniqId: string): XCalc {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         for (var idx = 0; idx < this.inventory.length; idx++) {
             if (this.inventory[idx].getUniqueId() == cardUniqId) {
                 return this.inventory[idx];
@@ -483,17 +483,17 @@ class XCardPlayer extends Uniqueable {
         }
         return null;
     };
-    public listInventoryDirect(engine: XCardGameEngine): XCard[] {
+    public listInventoryDirect(engine: XCalcGameEngine): XCalc[] {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
-        var newList: XCard[] = [];
+        if (!(engine instanceof XCalcGameEngine)) return null;
+        var newList: XCalc[] = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
             newList.push(this.inventory[idx]);
         }
         return newList;
     };
-    public listInventory(): XCard[] {
-        var newList: XCard[] = [];
+    public listInventory(): XCalc[] {
+        var newList: XCalc[] = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
             newList.push(this.inventory[idx].clone());
         }
@@ -506,17 +506,17 @@ class XCardPlayer extends Uniqueable {
         }
         return newList;
     };
-    public listAppliedDirect(engine: XCardGameEngine): XCard[] {
+    public listAppliedDirect(engine: XCalcGameEngine): XCalc[] {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
-        var newList: XCard[] = [];
+        if (!(engine instanceof XCalcGameEngine)) return null;
+        var newList: XCalc[] = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
             newList.push(this.applied[idx]);
         }
         return newList;
     };
-    public listApplied(): XCard[] {
-        var newList: XCard[] = [];
+    public listApplied(): XCalc[] {
+        var newList: XCalc[] = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
             newList.push(this.applied[idx].clone());
         }
@@ -533,7 +533,7 @@ class XCardPlayer extends Uniqueable {
         var affects: string = "0";
         var lastOp: string = "+";
         for (var idx = 0; idx < this.applied.length; idx++) {
-            var cardOne: XCard = this.applied[idx];
+            var cardOne: XCalc = this.applied[idx];
             var needSealBlacket: boolean = false;
 
             if (lastOp == '+' || lastOp == '＋' || lastOp == '-' || lastOp == '－') {
@@ -556,7 +556,7 @@ class XCardPlayer extends Uniqueable {
         }
         return affects;
     };
-    private removeCardOnInventory(card: XCard) {
+    private removeCardOnInventory(card: XCalc) {
         var ownerInvIdx = 0;
         for (var idx = 0; idx < this.inventory.length; idx++) {
             if (this.inventory[idx].getUniqueId() == card.getUniqueId()) {
@@ -566,9 +566,9 @@ class XCardPlayer extends Uniqueable {
         }
         hjow_removeItemFromArray(this.inventory, ownerInvIdx);
     };
-    public addOneOnInventory(card: XCard, engine: XCardGameEngine) { // 인벤토리에 카드 하나 추가 (덱에서 추가할 때 보통 사용)
+    public addOneOnInventory(card: XCalc, engine: XCalcGameEngine) { // 인벤토리에 카드 하나 추가 (덱에서 추가할 때 보통 사용)
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.inventory.push(card);
     };
     public getInventoryCardCount(): number {
@@ -578,8 +578,8 @@ class XCardPlayer extends Uniqueable {
         this.inventory = [];
         this.applied = [];
     };
-    public canPay(card: XCard, owner: XCardPlayer): string { // 본인/상대방이 이 플레이어의 슬롯에 카드를 두기 전 가능여부 확인, null 리턴이면 카드 두기가 가능, 뭔가 문자열이 리턴이 되면 해당 이유로 인해 카드 두기가 불가능한 것
-        var lastCard: XCard = this.lastAppliedCard();
+    public canPay(card: XCalc, owner: XCalcPlayer): string { // 본인/상대방이 이 플레이어의 슬롯에 카드를 두기 전 가능여부 확인, null 리턴이면 카드 두기가 가능, 뭔가 문자열이 리턴이 되면 해당 이유로 인해 카드 두기가 불가능한 것
+        var lastCard: XCalc = this.lastAppliedCard();
         if (card == null || owner == null) return hjow_trans("Please select your card first.");
         if (lastCard == null) return null; // 카드가 아직 아무것도 놓인 게 없으면 무조건 허용
         if (lastCard.no == 7 && owner.getUniqueId() != this.getUniqueId()) {
@@ -591,8 +591,8 @@ class XCardPlayer extends Uniqueable {
 
         return hjow_replaceStr(hjow_trans("The number, or the operation symbol should equal to the card [[LASTCARD]]"), "[[LASTCARD]]", lastCard.toString());
     };
-    public canPayByUniqId(cardUniqId: string, owner: XCardPlayer): string {
-        var card: XCard = null;
+    public canPayByUniqId(cardUniqId: string, owner: XCalcPlayer): string {
+        var card: XCalc = null;
         if (cardUniqId == null) return hjow_trans("Please select your card first.");
         for (var idx = 0; idx < owner.inventory.length; idx++) {
             if (owner.inventory[idx].getUniqueId() == cardUniqId) {
@@ -601,8 +601,8 @@ class XCardPlayer extends Uniqueable {
         }
         return this.canPay(card, owner);
     };
-    public pay(card: XCard, owner: XCardPlayer): string { // 본인/상대방이 이 플레이어의 슬롯에 카드를 둘 때 사용, null 리턴이면 카드 두기가 성공(처리됨), 뭔가 문자열이 리턴이 되면 해당 이유로 인해 카드 두기가 불가능(처리 안됨)
-        var lastCard: XCard = this.lastAppliedCard();
+    public pay(card: XCalc, owner: XCalcPlayer): string { // 본인/상대방이 이 플레이어의 슬롯에 카드를 둘 때 사용, null 리턴이면 카드 두기가 성공(처리됨), 뭔가 문자열이 리턴이 되면 해당 이유로 인해 카드 두기가 불가능(처리 안됨)
+        var lastCard: XCalc = this.lastAppliedCard();
         var err: string = this.canPay(card, owner);
         if (err != null) return err;
 
@@ -611,8 +611,8 @@ class XCardPlayer extends Uniqueable {
 
         return null;
     };
-    public payByUniqId(cardUniqId: string, owner: XCardPlayer): string {
-        var card: XCard = null;
+    public payByUniqId(cardUniqId: string, owner: XCalcPlayer): string {
+        var card: XCalc = null;
         if (cardUniqId == null) return hjow_trans("Please select your card first.");
         for (var idx = 0; idx < owner.inventory.length; idx++) {
             if (owner.inventory[idx].getUniqueId() == cardUniqId) {
@@ -622,7 +622,7 @@ class XCardPlayer extends Uniqueable {
         return this.pay(card, owner);
     };
     
-    public getCurrentPoint(gameMode: XCardGameMode): TBigInt {
+    public getCurrentPoint(gameMode: XCalcGameMode): TBigInt {
         var results: TBigInt = new TBigInt(0);
         for (var idx = 0; idx < this.applied.length; idx++) {
             var cardOne = this.applied[idx];
@@ -631,9 +631,9 @@ class XCardPlayer extends Uniqueable {
 
         return gameMode.processPoint(this, results);
     };
-    public getCurrentPointIfPaid(gameMode: XCardGameMode, additionalCard: XCard): TBigInt {
+    public getCurrentPointIfPaid(gameMode: XCalcGameMode, additionalCard: XCalc): TBigInt {
         var results: TBigInt = new TBigInt(0);
-        var simulatedApplied: XCard[] = [];
+        var simulatedApplied: XCalc[] = [];
         for (var idx = 0; idx < this.applied.length; idx++) {
             simulatedApplied.push(this.applied[idx]);
         }
@@ -651,13 +651,13 @@ class XCardPlayer extends Uniqueable {
     public customGameHTML(): string {
         return null;
     };
-    public applyInputs(engine: XCardGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
+    public applyInputs(engine: XCalcGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
 
     };
-    public refreshMain(engine: XCardGameEngine) {
+    public refreshMain(engine: XCalcGameEngine) {
 
     };
-    public refreshGame(engine: XCardGameEngine) {
+    public refreshGame(engine: XCalcGameEngine) {
 
     };
     public getPlayerTypeName(): string {
@@ -669,14 +669,14 @@ class XCardPlayer extends Uniqueable {
     public needToHideInventoryForSelf(): boolean { // AI가 아닌 경우, 자기 자신 차례일 때는 인벤토리가 보여야 함
         return false;
     };
-    public actOnTurn(engine: XCardGameEngine, mode: XCardGameMode, deck: XCard[], players: XCardPlayer[], turnNumber: number) {
+    public actOnTurn(engine: XCalcGameEngine, mode: XCalcGameMode, deck: XCalc[], players: XCalcPlayer[], turnNumber: number) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
 
     };
-    public setName(name: string, engine: XCardGameEngine) {
+    public setName(name: string, engine: XCalcGameEngine) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         if (! this.isNameEditable()) return;
         this.name = name;
     };
@@ -686,14 +686,14 @@ class XCardPlayer extends Uniqueable {
     protected setUniqueId(uniqueId: string) {
         this.uniqueId = uniqueId;
     };
-    public setUniqueIdFromMode(mode: XCardGameMode, uniqueId: string) {
+    public setUniqueIdFromMode(mode: XCalcGameMode, uniqueId: string) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         this.uniqueId = uniqueId;
     };
-    public toPlainObject(engine: XCardGameEngine): any {
+    public toPlainObject(engine: XCalcGameEngine): any {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
 
         var invArr: any[] = [];
         for (var idx = 0; idx < this.inventory.length; idx++) {
@@ -714,22 +714,22 @@ class XCardPlayer extends Uniqueable {
     };
 };
 
-class XCardPlayerCreator extends Uniqueable {
+class XCalcPlayerCreator extends Uniqueable {
     public getTypeName() {
         return null;
     };
     public getSupportPlayerClassName() {
         return null;
     };
-    public create(name: string): XCardPlayer {
+    public create(name: string): XCalcPlayer {
         return null;
     };
-    public restoreFromPlainObject(obj: any, engine: XCardGameEngine): XCardPlayer {
+    public restoreFromPlainObject(obj: any, engine: XCalcGameEngine): XCalcPlayer {
         return null;
     };
-    public restoreFromJSON(json: string, engine: XCardGameEngine): XCardPlayer {
+    public restoreFromJSON(json: string, engine: XCalcGameEngine): XCalcPlayer {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         return this.restoreFromPlainObject(JSON.parse(json), engine);
     };
     public isUserSelect(): boolean { // false 시 플레이어 종류 목록에 보이지 않음
@@ -737,59 +737,59 @@ class XCardPlayerCreator extends Uniqueable {
     };
 };
 
-class XCardUserPlayer extends XCardPlayer {
+class XCalcUserPlayer extends XCalcPlayer {
     public constructor(name: string) {
         super(name);
     };
     public getClassName(): string {
-        return "XCardUserPlayer";
+        return "XCalcUserPlayer";
     };
     public getPlayerTypeName(): string {
         return "Player";
     };
-    public toPlainObject(engine: XCardGameEngine): any {
+    public toPlainObject(engine: XCalcGameEngine): any {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
 
         var result = super.toPlainObject(engine);
         result.type = this.getClassName();
         return result;
     };
-    public setUniqueIdFromCreator(creator: XCardPlayerCreator, uniqueId: string) {
+    public setUniqueIdFromCreator(creator: XCalcPlayerCreator, uniqueId: string) {
         if (creator == null) return;
-        if (!(creator instanceof XCardUserPlayerCreator)) return;
+        if (!(creator instanceof XCalcUserPlayerCreator)) return;
         this.setUniqueId(uniqueId);
     };
 };
 
-class XCardUserPlayerCreator extends XCardPlayerCreator {
+class XCalcUserPlayerCreator extends XCalcPlayerCreator {
     public getTypeName() {
         return "Player";
     };
-    public create(name: string): XCardPlayer {
-        return new XCardUserPlayer(name);
+    public create(name: string): XCalcPlayer {
+        return new XCalcUserPlayer(name);
     };
     public getSupportPlayerClassName() {
-        return "XCardUserPlayer";
+        return "XCalcUserPlayer";
     };
-    public restoreFromPlainObject(obj: any, engine: XCardGameEngine): XCardPlayer {
+    public restoreFromPlainObject(obj: any, engine: XCalcGameEngine): XCalcPlayer {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         if (obj.type != this.getSupportPlayerClassName()) return null;
-        var result: XCardUserPlayer = new XCardUserPlayer(obj.name);
+        var result: XCalcUserPlayer = new XCalcUserPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
-        var invArr: XCard[] = [];
+        var invArr: XCalc[] = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
             invArr.push(newCard);
         }
         result.setInventory(invArr, engine);
-        var appArr: XCard[] = [];
+        var appArr: XCalc[] = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -800,9 +800,9 @@ class XCardUserPlayerCreator extends XCardPlayerCreator {
     };
 };
 
-function hjow_orderPlayerList(players: XCardPlayer[], gameMode: XCardGameMode): XCardPlayer[] {
-    var playerOrders: XCardPlayer[] = [];
-    var temps: XCardPlayer[] = hjow_simpleCloneArray(players);
+function hjow_orderPlayerList(players: XCalcPlayer[], gameMode: XCalcGameMode): XCalcPlayer[] {
+    var playerOrders: XCalcPlayer[] = [];
+    var temps: XCalcPlayer[] = hjow_simpleCloneArray(players);
 
     // 순위별로 플레이어 다시 정렬
     var preventInfLoop: number = 0;
@@ -835,14 +835,14 @@ function hjow_orderPlayerList(players: XCardPlayer[], gameMode: XCardGameMode): 
     return playerOrders;
 };
 
-class XCardAIPlayer extends XCardPlayer {
+class XCalcAIPlayer extends XCalcPlayer {
     protected difficulty: number = 0;
     protected customAIScript: string = null;
     public constructor(name: string) {
         super(name);
     };
     public getClassName(): string {
-        return "XCardAIPlayer";
+        return "XCalcAIPlayer";
     };
     public getPlayerTypeName(): string {
         return "AI";
@@ -853,19 +853,19 @@ class XCardAIPlayer extends XCardPlayer {
     public needToHideInventoryForSelf(): boolean { // AI인 경우, 자기 자신 차례일 때도 인벤토리가 보이면 안 됨
         return true;
     };
-    public setDifficulty(diff: number, engine: XCardGameEngine) {
+    public setDifficulty(diff: number, engine: XCalcGameEngine) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.difficulty = diff;
     };
-    public setCustomAIScript(scripts: string, engine: XCardGameEngine) {
+    public setCustomAIScript(scripts: string, engine: XCalcGameEngine) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         this.customAIScript = scripts;
     };
-    public actOnTurn(engine: XCardGameEngine, mode: XCardGameMode, deck: XCard[], players: XCardPlayer[], turnNumber: number) {
+    public actOnTurn(engine: XCalcGameEngine, mode: XCalcGameMode, deck: XCalc[], players: XCalcPlayer[], turnNumber: number) {
         if (engine == null) return;
-        if (!(engine instanceof XCardGameEngine)) return;
+        if (!(engine instanceof XCalcGameEngine)) return;
         if (engine.isActPlayerStopRequested() || (!engine.isThisTurn(this))) return;
 
         // 플레이어에게 주어지는 시간 (남은 시간과 1초정도 다를 수 있음)
@@ -923,8 +923,8 @@ class XCardAIPlayer extends XCardPlayer {
 
         if (needDefaultCalc) { // 기본 제공 인공지능 처리 로직
             // 사용 가능한 동작들을 다 배열에 넣어서 각각 수행 결과 이득 정도를 점수를 매겨 그중 높은 점수를 선택하도록 함 (난이도가 낮으면 랜덤하게 일정 확률로 덜 높은 점수의 동작을 선택하면 됨)
-            var availableActions: XCardAIProcessAction[] = [];
-            var oneAct: XCardAIProcessAction = null;
+            var availableActions: XCalcAIProcessAction[] = [];
+            var oneAct: XCalcAIProcessAction = null;
 
             var offensives: number = 1; // 공격 행동 비율점수
             var defendees: number = 1;  // 방어 행동 비율점수
@@ -935,7 +935,7 @@ class XCardAIPlayer extends XCardPlayer {
             if (this.difficulty == 0) defendees = 8;
 
             // 덱에서 카드를 받는 동작은 항상 사용가능 (단, 지금 다른 플레이어에 비해 불리한 상황이면서 덱에 남은 카드 수가 적으면, 점수를 낮게 책정함) --> 동작 수는 항상 1 이상
-            oneAct = new XCardAIProcessAction();
+            oneAct = new XCalcAIProcessAction();
             oneAct.card = null;
             oneAct.payTargetPlayerIndex = -1; // 덱에서 카드 받을 때는 -1
             oneAct.actionPlayerIndex = 0;
@@ -974,9 +974,9 @@ class XCardAIPlayer extends XCardPlayer {
 
             // 다른 플레이어에게 카드를 줄 수 있는 모든 경우의 수 찾기
             for (var cdx = 0; cdx < this.inventory.length; cdx++) {
-                var invCard: XCard = this.inventory[cdx];
+                var invCard: XCalc = this.inventory[cdx];
                 for (var pdx = 0; pdx < players.length; pdx++) {
-                    var playerOne: XCardPlayer = players[pdx];
+                    var playerOne: XCalcPlayer = players[pdx];
                     var errMsg: string = playerOne.canPay(invCard, this);
                     if (errMsg != null) continue; // 카드 내기가 불가능 - 사용 가능 동작에 등록하지 않음
 
@@ -1021,7 +1021,7 @@ class XCardAIPlayer extends XCardPlayer {
                     }
                     // 이 시점에서 actionPoint 는 null 이 아님
                     for (var pdx2 = 0; pdx2 < players.length; pdx2++) {
-                        var playerAnother: XCardPlayer = players[pdx2];
+                        var playerAnother: XCalcPlayer = players[pdx2];
                         if (playerAnother.getUniqueId() == playerOne.getUniqueId()) continue; // 이미 계산한 플레이어는 점수 계산에서 제외
 
                         if (playerAnother.getUniqueId() == this.getUniqueId()) {
@@ -1031,7 +1031,7 @@ class XCardAIPlayer extends XCardPlayer {
                         }
                     }
 
-                    oneAct = new XCardAIProcessAction();
+                    oneAct = new XCalcAIProcessAction();
                     oneAct.card = invCard;
                     oneAct.payTargetPlayerIndex = pdx;
                     oneAct.actionPlayerIndex = 0;
@@ -1052,7 +1052,7 @@ class XCardAIPlayer extends XCardPlayer {
             }
 
             // 동작들을 가지고 순서 매기기
-            var orderedActions: XCardAIProcessAction[] = [];
+            var orderedActions: XCalcAIProcessAction[] = [];
             var maxPoints: TBigInt = new TBigInt("-99999999999999");
             var maxIdx: number = -1;
             var preventInfLoop: number = 0;
@@ -1086,7 +1086,7 @@ class XCardAIPlayer extends XCardPlayer {
             if (engine.isActPlayerStopRequested() || (!engine.isThisTurn(this))) return; // 시간 제한이 지났는지 확인 (지났으면 연산 중단)
 
             // 동작들 중 실제 수행할 동작 선택
-            var selectedAct: XCardAIProcessAction = null;
+            var selectedAct: XCalcAIProcessAction = null;
             var randomNo: number = Math.round(Math.random() * 100.0);
             if (this.difficulty >= 4) { // 미친 난이도
                 selectedAct = orderedActions[0]; // 그냥 가장 좋은 선택을 함
@@ -1160,13 +1160,13 @@ class XCardAIPlayer extends XCardPlayer {
         results += "</div>";
         return results;
     };
-    public refreshMain(engine: XCardGameEngine) {
+    public refreshMain(engine: XCalcGameEngine) {
         var playerBlock = jq(engine.getPlaceArea()).find(".pbasic_" + this.getUniqueId());
         var textBlock = playerBlock.find('.tx_ai_script');
         textBlock.val('');
         if (this.customAIScript != null) textBlock.val(this.customAIScript);
     };
-    public applyInputs(engine: XCardGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
+    public applyInputs(engine: XCalcGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
         if (gameStarted) return;
         if (needHideScreen) return;
         if (showResult) return;
@@ -1180,9 +1180,9 @@ class XCardAIPlayer extends XCardPlayer {
             this.customAIScript = scriptInputs;
         }
     };
-    public toPlainObject(engine: XCardGameEngine): any {
+    public toPlainObject(engine: XCalcGameEngine): any {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
 
         var result = super.toPlainObject(engine);
         result.type = this.getClassName();
@@ -1190,41 +1190,41 @@ class XCardAIPlayer extends XCardPlayer {
         result.customAIScript = this.customAIScript;
         return result;
     };
-    public setUniqueIdFromCreator(creator: XCardPlayerCreator, uniqueId: string) {
+    public setUniqueIdFromCreator(creator: XCalcPlayerCreator, uniqueId: string) {
         if (creator == null) return;
-        if (!(creator instanceof XCardAIPlayerCreator)) return;
+        if (!(creator instanceof XCalcAIPlayerCreator)) return;
         this.setUniqueId(uniqueId);
     };
 };
 
-class XCardAIPlayerCreator extends XCardPlayerCreator {
+class XCalcAIPlayerCreator extends XCalcPlayerCreator {
     public getTypeName() {
         return "AI";
     };
-    public create(name: string): XCardPlayer {
-        return new XCardAIPlayer(name);
+    public create(name: string): XCalcPlayer {
+        return new XCalcAIPlayer(name);
     };
     public getSupportPlayerClassName() {
-        return "XCardAIPlayer";
+        return "XCalcAIPlayer";
     };
-    public restoreFromPlainObject(obj: any, engine: XCardGameEngine): XCardPlayer {
+    public restoreFromPlainObject(obj: any, engine: XCalcGameEngine): XCalcPlayer {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         if (obj.type != this.getSupportPlayerClassName()) return null;
-        var result: XCardAIPlayer = new XCardAIPlayer(obj.name);
+        var result: XCalcAIPlayer = new XCalcAIPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
-        var invArr: XCard[] = [];
+        var invArr: XCalc[] = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
             invArr.push(newCard);
         }
         result.setInventory(invArr, engine);
-        var appArr: XCard[] = [];
+        var appArr: XCalc[] = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -1237,7 +1237,7 @@ class XCardAIPlayerCreator extends XCardPlayerCreator {
     };
 };
 
-class XCardTutorialPlayer extends XCardAIPlayer {
+class XCalcTutorialPlayer extends XCalcAIPlayer {
     public constructor(name: string) {
         super(name);
         this.difficulty = 9;
@@ -1246,14 +1246,14 @@ class XCardTutorialPlayer extends XCardAIPlayer {
         return "Tutorial Assistant";
     };
     public getClassName() {
-        return "XCardTutorialPlayer";
+        return "XCalcTutorialPlayer";
     };
-    public actOnTurn(engine: XCardGameEngine, mode: XCardGameMode, deck: XCard[], players: XCardPlayer[], turnNumber: number) {
+    public actOnTurn(engine: XCalcGameEngine, mode: XCalcGameMode, deck: XCalc[], players: XCalcPlayer[], turnNumber: number) {
         
     };
-    public toPlainObject(engine: XCardGameEngine): any {
+    public toPlainObject(engine: XCalcGameEngine): any {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
 
         var result = super.toPlainObject(engine);
         result.type = this.getClassName();
@@ -1261,18 +1261,18 @@ class XCardTutorialPlayer extends XCardAIPlayer {
         result.customAIScript = '';
         return result;
     };
-    public setUniqueIdFromCreator(creator: XCardPlayerCreator, uniqueId: string) {
+    public setUniqueIdFromCreator(creator: XCalcPlayerCreator, uniqueId: string) {
         if (creator == null) return;
-        if (!(creator instanceof XCardTutorialPlayerCreator)) return;
+        if (!(creator instanceof XCalcTutorialPlayerCreator)) return;
         this.setUniqueId(uniqueId);
     };
     public customMainHTML(): string {
         return null;
     };
-    public refreshMain(engine: XCardGameEngine) {
+    public refreshMain(engine: XCalcGameEngine) {
         
     };
-    public applyInputs(engine: XCardGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
+    public applyInputs(engine: XCalcGameEngine, gameStarted: boolean, needHideScreen: boolean, showResult: boolean) {
         this.difficulty = 9;
     };
     public isNameEditable() {
@@ -1280,34 +1280,34 @@ class XCardTutorialPlayer extends XCardAIPlayer {
     };
 };
 
-class XCardTutorialPlayerCreator extends XCardAIPlayerCreator {
+class XCalcTutorialPlayerCreator extends XCalcAIPlayerCreator {
     public getTypeName() {
         return "Tutorial Assistant";
     };
-    public create(name: string): XCardPlayer {
-        return new XCardTutorialPlayer(name);
+    public create(name: string): XCalcPlayer {
+        return new XCalcTutorialPlayer(name);
     };
     public getSupportPlayerClassName() {
-        return "XCardTutorialPlayer";
+        return "XCalcTutorialPlayer";
     };
-    public restoreFromPlainObject(obj: any, engine: XCardGameEngine): XCardPlayer {
+    public restoreFromPlainObject(obj: any, engine: XCalcGameEngine): XCalcPlayer {
         if (engine == null) return null;
-        if (!(engine instanceof XCardGameEngine)) return null;
+        if (!(engine instanceof XCalcGameEngine)) return null;
         if (obj.type != this.getSupportPlayerClassName()) return null;
-        var result: XCardTutorialPlayer = new XCardTutorialPlayer(obj.name);
+        var result: XCalcTutorialPlayer = new XCalcTutorialPlayer(obj.name);
         result.setUniqueIdFromCreator(this, obj.uniqueId);
-        var invArr: XCard[] = [];
+        var invArr: XCalc[] = [];
         for (var idx = 0; idx < obj.inventory.length; idx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.inventory[idx].no;
             newCard.op = obj.inventory[idx].op;
             newCard.setUniqueId(engine, obj.inventory[idx].uniqueId);
             invArr.push(newCard);
         }
         result.setInventory(invArr, engine);
-        var appArr: XCard[] = [];
+        var appArr: XCalc[] = [];
         for (var adx = 0; adx < obj.applied.length; adx++) {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = obj.applied[adx].no;
             newCard.op = obj.applied[adx].op;
             newCard.setUniqueId(engine, obj.applied[adx].uniqueId);
@@ -1323,18 +1323,18 @@ class XCardTutorialPlayerCreator extends XCardAIPlayerCreator {
     };
 };
 
-class XCardGameMode extends ModuleObject {
-    protected totals: XCard[] = [];
+class XCalcGameMode extends ModuleObject {
+    protected totals: XCalc[] = [];
     public constructor() {
         super("X Card Game Mode", "X Card Game Undefined Mode");
     };
     public getClassName(): string {
-        return "XCardGameMode";
+        return "XCalcGameMode";
     };
-    public isGameAvailable(engine: XCardGameEngine, players: XCardPlayer[]): boolean {
+    public isGameAvailable(engine: XCalcGameEngine, players: XCalcPlayer[]): boolean {
         return (players.length >= 2);
     };
-    public createPlayers(engine: XCardGameEngine): XCardPlayer[] {
+    public createPlayers(engine: XCalcGameEngine): XCalcPlayer[] {
         return null; // null 을 넣으면 메인화면에서 플레이어 지정 가능, null이 아니면 플레이어 지정 불가능하고 여기서 리턴한 대로 플레이어가 설정되며 플레이어 이름만 변경 가능
     };
     public init(playerCount: number) {
@@ -1344,7 +1344,7 @@ class XCardGameMode extends ModuleObject {
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx: number = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 2; cdx++) {
-                    var newCard: XCard = new XCard();
+                    var newCard: XCalc = new XCalc();
                     if (cdx == 0) newCard.op = '+';
                     if (cdx == 1) newCard.op = '-';
                     if (cdx == 2) newCard.op = '×';
@@ -1361,45 +1361,45 @@ class XCardGameMode extends ModuleObject {
     public getEndCardNumber(): number {
         return 10;
     };
-    public playerInvList(player: XCardPlayer): XCard[] {
-        var result: XCard[] = [];
+    public playerInvList(player: XCalcPlayer): XCalc[] {
+        var result: XCalc[] = [];
         return result;
     };
-    public deckList(): XCard[] {
-        var result: XCard[] = [];
+    public deckList(): XCalc[] {
+        var result: XCalc[] = [];
         return result;
     };
-    public getEachPlayerTimeLimit(player: XCardPlayer, engine: XCardGameEngine): number {
+    public getEachPlayerTimeLimit(player: XCalcPlayer, engine: XCalcGameEngine): number {
         return 30;
     };
-    public getHideTime(player: XCardPlayer, engine: XCardGameEngine): number {
+    public getHideTime(player: XCalcPlayer, engine: XCalcGameEngine): number {
         if (player.isUserControllable()) return 30;
         return 2;
     };
-    public needHide(player: XCardPlayer, engine: XCardGameEngine): boolean {
-        if (player instanceof XCardAIPlayer) return false;
+    public needHide(player: XCalcPlayer, engine: XCalcGameEngine): boolean {
+        if (player instanceof XCalcAIPlayer) return false;
         return true;
     };
-    public startGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]): boolean { // 게임 시작 시 동작 처리, true 리턴 시 작업 직후 기본 모드 게임 준비 및 시작 처리를 수행함, false 리턴 시 이 메소드 끝나고 바로 게임이 진행됨
+    public startGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]): boolean { // 게임 시작 시 동작 처리, true 리턴 시 작업 직후 기본 모드 게임 준비 및 시작 처리를 수행함, false 리턴 시 이 메소드 끝나고 바로 게임이 진행됨
         return true;
     };
-    public afterPrepareStartDefaultGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]) { // 기본 모드 게임 준비 및 시작 처리 끝난 직후 수행함. 기본 모드 준비 작업 수행 시에만 호출됨에 유의!
+    public afterPrepareStartDefaultGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]) { // 기본 모드 게임 준비 및 시작 처리 끝난 직후 수행함. 기본 모드 준비 작업 수행 시에만 호출됨에 유의!
 
     };
-    public beforeNextTurnWork(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직전 호출
+    public beforeNextTurnWork(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직전 호출
 
     };
 
-    public afterNextTurnWork(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직후 호출
+    public afterNextTurnWork(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직후 호출
 
     };
-    public onFinishGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]) { // 게임 끝나고 호출
+    public onFinishGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]) { // 게임 끝나고 호출
 
     };
-    public afterResultPage(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]) { // 게임 끝나고 결과 화면 로드 후 호출
+    public afterResultPage(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]) { // 게임 끝나고 결과 화면 로드 후 호출
 
     };
-    public processPoint(player: XCardPlayer, beforeCalculated: TBigInt): TBigInt { // 점수 계산 직후 점수에 추가 연산 (리턴된 값이 계산 결과로 적용됨 ! any타입 매개변수 객체로는 bigInt 객체가 들어올 예정)
+    public processPoint(player: XCalcPlayer, beforeCalculated: TBigInt): TBigInt { // 점수 계산 직후 점수에 추가 연산 (리턴된 값이 계산 결과로 적용됨 ! any타입 매개변수 객체로는 bigInt 객체가 들어올 예정)
         return beforeCalculated;
     };
     public isReplayAllowed() {
@@ -1407,42 +1407,42 @@ class XCardGameMode extends ModuleObject {
     };
 };
 
-class XCardGameDefaultMode extends XCardGameMode {
+class XCalcGameDefaultMode extends XCalcGameMode {
     public constructor() {
         super();
         this.name = "Normal Mode";
         this.desc = "Each player will get 10 cards at the game starts.";
     };
     public getClassName(): string {
-        return "XCardGameDefaultMode";
+        return "XCalcGameDefaultMode";
     };
     protected playerStartCardCount(): number {
         return 10;
     };
-    public playerInvList(player: XCardPlayer): XCard[] {
-        var result: XCard[] = [];
+    public playerInvList(player: XCalcPlayer): XCalc[] {
+        var result: XCalc[] = [];
         var cardCnt = this.playerStartCardCount();
         for (var idx = 0; idx < cardCnt; idx++) {
-            var cardOne: XCard = this.totals[0];
+            var cardOne: XCalc = this.totals[0];
             hjow_removeItemFromArray(this.totals, 0);
             result.push(cardOne);
         }
         return result;
     };
-    public deckList(): XCard[] {
+    public deckList(): XCalc[] {
         return hjow_simpleCloneArray(this.totals);
     };
 };
 
 
-class XCardGameSpeedMode extends XCardGameDefaultMode {
+class XCalcGameSpeedMode extends XCalcGameDefaultMode {
     public constructor() {
         super();
         this.name = "Speed Mode";
         this.desc = "Each player will get 7 cards at the game starts. The number of card will be -1 to 5.";
     };
     public getClassName(): string {
-        return "XCardGameSpeedMode";
+        return "XCalcGameSpeedMode";
     };
     protected playerStartCardCount(): number {
         return 7;
@@ -1450,12 +1450,12 @@ class XCardGameSpeedMode extends XCardGameDefaultMode {
     public getEndCardNumber(): number {
         return 5;
     };
-    public getEachPlayerTimeLimit(player: XCardPlayer, engine: XCardGameEngine): number {
+    public getEachPlayerTimeLimit(player: XCalcPlayer, engine: XCalcGameEngine): number {
         return 20;
     };
 };
 
-class XCardGameMultiplylessMode extends XCardGameDefaultMode {
+class XCalcGameMultiplylessMode extends XCalcGameDefaultMode {
     public constructor() {
         super();
         this.name = "Multiplyless Mode";
@@ -1468,7 +1468,7 @@ class XCardGameMultiplylessMode extends XCardGameDefaultMode {
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx: number = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 1; cdx++) {
-                    var newCard: XCard = new XCard();
+                    var newCard: XCalc = new XCalc();
                     if (cdx == 0) newCard.op = '+';
                     if (cdx == 1) newCard.op = '-';
                     newCard.no = idx;
@@ -1482,11 +1482,11 @@ class XCardGameMultiplylessMode extends XCardGameDefaultMode {
         return 0;
     };
     public getClassName(): string {
-        return "XCardGameMultiplylessMode";
+        return "XCalcGameMultiplylessMode";
     };
 };
 
-class XCardGamePluslessMode extends XCardGameDefaultMode {
+class XCalcGamePluslessMode extends XCalcGameDefaultMode {
     public constructor() {
         super();
         this.name = "Plusless Mode";
@@ -1499,7 +1499,7 @@ class XCardGamePluslessMode extends XCardGameDefaultMode {
         for (var pdx = 0; pdx < playerCount; pdx++) {
             for (var idx: number = starts; idx <= ends; idx++) {
                 for (var cdx = 0; cdx <= 1; cdx++) {
-                    var newCard: XCard = new XCard();
+                    var newCard: XCalc = new XCalc();
                     if (cdx == 0) newCard.op = '×';
                     if (cdx == 1) newCard.op = '-';
                     newCard.no = idx;
@@ -1510,11 +1510,11 @@ class XCardGamePluslessMode extends XCardGameDefaultMode {
         hjow_ramdomizeArrayOrder(this.totals);
     };
     public getClassName(): string {
-        return "XCardGamePluslessMode";
+        return "XCalcGamePluslessMode";
     };
 };
 
-class XCardGameTutorial extends XCardGameSpeedMode {
+class XCalcGameTutorial extends XCalcGameSpeedMode {
     public constructor() {
         super();
         this.name = "Tutorial";
@@ -1522,25 +1522,25 @@ class XCardGameTutorial extends XCardGameSpeedMode {
     };
     
     public getClassName(): string {
-        return "XCardGameTutorial";
+        return "XCalcGameTutorial";
     };
-    public isGameAvailable(engine: XCardGameEngine, players: XCardPlayer[]): boolean {
+    public isGameAvailable(engine: XCalcGameEngine, players: XCalcPlayer[]): boolean {
         return true;
     };
-    public createPlayers(engine: XCardGameEngine): XCardPlayer[] {
-        var results: XCardPlayer[] = [];
-        var newCardHaves: XCard[] = [];
-        var newCard: XCard = null;
+    public createPlayers(engine: XCalcGameEngine): XCalcPlayer[] {
+        var results: XCalcPlayer[] = [];
+        var newCardHaves: XCalc[] = [];
+        var newCard: XCalc = null;
 
-        var newPlayer: XCardPlayer = new XCardUserPlayer(hjow_trans("Player"));
+        var newPlayer: XCalcPlayer = new XCalcUserPlayer(hjow_trans("Player"));
         newPlayer.setUniqueIdFromMode(this, "p0");
         results.push(newPlayer);
 
-        newPlayer = new XCardTutorialPlayer(hjow_trans("AI") + " 1");
+        newPlayer = new XCalcTutorialPlayer(hjow_trans("AI") + " 1");
         newPlayer.setUniqueIdFromMode(this, "p1");
         results.push(newPlayer);
 
-        newPlayer = new XCardTutorialPlayer(hjow_trans("AI") + " 2");
+        newPlayer = new XCalcTutorialPlayer(hjow_trans("AI") + " 2");
         newPlayer.setUniqueIdFromMode(this, "p2");
         results.push(newPlayer);
 
@@ -1555,17 +1555,17 @@ class XCardGameTutorial extends XCardGameSpeedMode {
     public getEndCardNumber(): number {
         return 10;
     };
-    public playerInvList(player: XCardPlayer): XCard[] {
-        var result: XCard[] = [];
+    public playerInvList(player: XCalcPlayer): XCalc[] {
+        var result: XCalc[] = [];
         var playerUniq: string = player.getUniqueId();
 
         if (playerUniq == 'p0') {
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.op = '+';
             newCard.no = 3;
             result.push(newCard);
 
-            newCard = new XCard();
+            newCard = new XCalc();
             newCard.op = '-';
             newCard.no = 3;
             result.push(newCard);
@@ -1573,43 +1573,43 @@ class XCardGameTutorial extends XCardGameSpeedMode {
 
         return result;
     };
-    public deckList(): XCard[] {
-        var result: XCard[] = [];
+    public deckList(): XCalc[] {
+        var result: XCalc[] = [];
         return result;
     };
-    public getEachPlayerTimeLimit(player: XCardPlayer, engine: XCardGameEngine): number {
+    public getEachPlayerTimeLimit(player: XCalcPlayer, engine: XCalcGameEngine): number {
         return 120;
     };
-    public getHideTime(player: XCardPlayer, engine: XCardGameEngine): number {
+    public getHideTime(player: XCalcPlayer, engine: XCalcGameEngine): number {
         if (player.isUserControllable()) return 30;
         return 2;
     };
-    public needHide(player: XCardPlayer, engine: XCardGameEngine): boolean {
-        if (player instanceof XCardAIPlayer) return false;
+    public needHide(player: XCalcPlayer, engine: XCalcGameEngine): boolean {
+        if (player instanceof XCalcAIPlayer) return false;
         return true;
     };
-    public startGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]): boolean { // 게임 시작 시 동작 처리, true 리턴 시 작업 직후 기본 모드 게임 준비 및 시작 처리를 수행함, false 리턴 시 이 메소드 끝나고 바로 게임이 진행됨
+    public startGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]): boolean { // 게임 시작 시 동작 처리, true 리턴 시 작업 직후 기본 모드 게임 준비 및 시작 처리를 수행함, false 리턴 시 이 메소드 끝나고 바로 게임이 진행됨
         return true;
     };
-    public afterPrepareStartDefaultGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]) { // 기본 모드 게임 준비 및 시작 처리 끝난 직후 수행함. 기본 모드 준비 작업 수행 시에만 호출됨에 유의!
+    public afterPrepareStartDefaultGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]) { // 기본 모드 게임 준비 및 시작 처리 끝난 직후 수행함. 기본 모드 준비 작업 수행 시에만 호출됨에 유의!
         engine.setTurnIndex(0, this);
-        var newPlayer: XCardPlayer = null;
-        var newCardHaves: XCard[] = [];
-        var newCard: XCard = null;
+        var newPlayer: XCalcPlayer = null;
+        var newCardHaves: XCalc[] = [];
+        var newCard: XCalc = null;
 
         newPlayer = players[0];
         newCardHaves = [];
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "＋";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 6;
         newCard.op = "－";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = -1;
         newCard.op = "×";
@@ -1618,24 +1618,24 @@ class XCardGameTutorial extends XCardGameSpeedMode {
 
         newPlayer = players[1];
         newCardHaves = [];
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 3;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 4;
         newCard.op = "×";
         newCardHaves.push(newCard);
         newPlayer.setInventory(newCardHaves, engine);
         newCardHaves = [];
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.no = 7;
         newCard.op = "×";
         newCardHaves.push(newCard);
@@ -1643,28 +1643,28 @@ class XCardGameTutorial extends XCardGameSpeedMode {
 
         newPlayer = players[2];
         newCardHaves = [];
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc01");
         newCard.no = 5;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 3;
         newCard.op = "×";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.setUniqueId(engine, "pc02");
         newCard.no = 4;
         newCard.op = "×";
         newCardHaves.push(newCard);
         newPlayer.setInventory(newCardHaves, engine);
         newCardHaves = [];
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.no = 6;
         newCard.op = "－";
         newCardHaves.push(newCard);
-        newCard = new XCard();
+        newCard = new XCalc();
         newCard.no = 7;
         newCard.op = "－";
         newCardHaves.push(newCard);
@@ -1673,17 +1673,17 @@ class XCardGameTutorial extends XCardGameSpeedMode {
         engine.setPauseTimeLimit(true, this);
         
     };
-    public beforeNextTurnWork(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직전 호출
+    public beforeNextTurnWork(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직전 호출
 
     };
 
-    public afterNextTurnWork(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직후 호출
+    public afterNextTurnWork(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[], turnNumber: number) { // 다음 플레이어에게 차례 넘기는 작업 수행 직후 호출
 
     };
-    public onFinishGame(engine: XCardGameEngine, players: XCardPlayer[], deckObj: XCard[]) { // 게임 끝나고 호출
+    public onFinishGame(engine: XCalcGameEngine, players: XCalcPlayer[], deckObj: XCalc[]) { // 게임 끝나고 호출
 
     };
-    public processPoint(player: XCardPlayer, beforeCalculated: TBigInt): TBigInt { // 점수 계산 직후 점수에 추가 연산 (리턴된 값이 계산 결과로 적용됨 ! any타입 매개변수 객체로는 bigInt 객체가 들어올 예정)
+    public processPoint(player: XCalcPlayer, beforeCalculated: TBigInt): TBigInt { // 점수 계산 직후 점수에 추가 연산 (리턴된 값이 계산 결과로 적용됨 ! any타입 매개변수 객체로는 bigInt 객체가 들어올 예정)
         return beforeCalculated;
     };
     public isReplayAllowed() {
@@ -1691,19 +1691,19 @@ class XCardGameTutorial extends XCardGameSpeedMode {
     };
 };
 
-var hjow_xcard_addGameMode = null;
-var hjow_xcard_addPlayerType = null;
+var hjow_xcalc_addGameMode = null;
+var hjow_xcalc_addPlayerType = null;
 
-class XCardGameEngine extends ModuleObject {
+class XCalcGameEngine extends ModuleObject {
     protected version: string = "0.0.7";
     protected placeArea: string = null;
-    protected gameModeList: XCardGameMode[] = [];
+    protected gameModeList: XCalcGameMode[] = [];
     protected gameModeIndex: number = 0;
-    protected playerTypes: XCardPlayerCreator[] = [];
+    protected playerTypes: XCalcPlayerCreator[] = [];
     protected gameStarted: boolean = false;
     protected timers: IntervalTimer[] = [];
-    protected players: XCardPlayer[] = [];
-    protected deck: XCard[] = [];
+    protected players: XCalcPlayer[] = [];
+    protected deck: XCalc[] = [];
     protected beforeSelectedPlayerType: string = null;
     protected turnPlayerIndex: number = 0;
     protected turnPlayerTime: number = 0;
@@ -1717,12 +1717,12 @@ class XCardGameEngine extends ModuleObject {
     protected turnChanging: boolean = false;
     protected actPlayerTurnRequest: boolean = false;
     protected actPlayerTurnStopRequest: boolean = false;
-    protected replay: XCardReplay = null;
+    protected replay: XCalcReplay = null;
     protected showSettings: boolean = false;
     protected debugMode: boolean = false;
     protected addiRefFunc: Function = null;
 
-    public constructor(plcArea: string = '.hjow_xcard_style_place', additionalRefreshFunction: Function = null, debugMode: boolean = false) {
+    public constructor(plcArea: string = '.hjow_xcalc_style_place', additionalRefreshFunction: Function = null, debugMode: boolean = false) {
         super("X Card", "X Card Game Core Engine");
         if (typeof (plcArea) != 'string') {
             hjow_error('The parameter should be a string which is jQuery-selector form.');
@@ -1730,7 +1730,7 @@ class XCardGameEngine extends ModuleObject {
         }
         this.placeArea = String(plcArea);
         hjow_prepareJQuery();
-        jq(plcArea).addClass('hjow_xcard_style_place');
+        jq(plcArea).addClass('hjow_xcalc_style_place');
         jq(plcArea).css('overflow-x', 'hidden');
         jq(plcArea).css('overflow-y', 'auto');
         this.addiRefFunc = additionalRefreshFunction;
@@ -1741,12 +1741,12 @@ class XCardGameEngine extends ModuleObject {
         }
     };
     public getClassName(): string {
-        return "XCardGameEngine";
+        return "XCalcGameEngine";
     };
     public getVersion() {
         return this.version;
     };
-    public init(): XCardGameEngine {
+    public init(): XCalcGameEngine {
         this.initEngine();
         this.initDom();
         this.applyPropertiesBefore();
@@ -1760,28 +1760,28 @@ class XCardGameEngine extends ModuleObject {
         this.players = [];
 
         this.playerTypes = [];
-        this.playerTypes.push(new XCardUserPlayerCreator());
-        this.playerTypes.push(new XCardAIPlayerCreator());
-        this.playerTypes.push(new XCardTutorialPlayerCreator());
+        this.playerTypes.push(new XCalcUserPlayerCreator());
+        this.playerTypes.push(new XCalcAIPlayerCreator());
+        this.playerTypes.push(new XCalcTutorialPlayerCreator());
 
-        this.players.push(new XCardUserPlayer(hjow_trans("User")));
-        this.players.push(new XCardAIPlayer("AI " + this.players.length));
-        this.players.push(new XCardAIPlayer("AI " + this.players.length));
-        this.players.push(new XCardAIPlayer("AI " + this.players.length));
+        this.players.push(new XCalcUserPlayer(hjow_trans("User")));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
+        this.players.push(new XCalcAIPlayer("AI " + this.players.length));
 
-        this.gameModeList.push(new XCardGameDefaultMode());
-        this.gameModeList.push(new XCardGameSpeedMode());
-        this.gameModeList.push(new XCardGameMultiplylessMode());
-        this.gameModeList.push(new XCardGamePluslessMode());
-        // this.gameModeList.push(new XCardGameTutorial());
+        this.gameModeList.push(new XCalcGameDefaultMode());
+        this.gameModeList.push(new XCalcGameSpeedMode());
+        this.gameModeList.push(new XCalcGameMultiplylessMode());
+        this.gameModeList.push(new XCalcGamePluslessMode());
+        // this.gameModeList.push(new XCalcGameTutorial());
 
         var selfObj = this;
-        if (hjow_xcard_addGameMode != null) {
-            hjow_xcard_addGameMode = function (gameMode) {
+        if (hjow_xcalc_addGameMode != null) {
+            hjow_xcalc_addGameMode = function (gameMode) {
                 selfObj.gameModeList.push(gameMode);
                 selfObj.refreshPage();
             };
-            hjow_xcard_addPlayerType = function (playerType) {
+            hjow_xcalc_addPlayerType = function (playerType) {
                 selfObj.playerTypes.push(playerType);
                 selfObj.refreshPage();
             };
@@ -1846,7 +1846,7 @@ class XCardGameEngine extends ModuleObject {
         this.prepareFirstProp();
     };
     initDom() {
-        jq(this.placeArea).addClass('hjow_xcard_style_place');
+        jq(this.placeArea).addClass('hjow_xcalc_style_place');
 
         var bodyHtml: string = "<div class='page page_main section'></div>\n";
         bodyHtml += "<div class='page page_game section'></div>\n";
@@ -1857,7 +1857,7 @@ class XCardGameEngine extends ModuleObject {
         
         jq(this.placeArea).html(hjow_toStaticHTML(bodyHtml));
 
-        jq('body').append("<div class='hjow_xcard_how_to_play_dialog' style='width: 400px; height: 300px; display: none' title=\"" + hjow_serializeString(hjow_trans("How to play")) + "\"></div>");
+        jq('body').append("<div class='hjow_xcalc_how_to_play_dialog' style='width: 400px; height: 300px; display: none' title=\"" + hjow_serializeString(hjow_trans("How to play")) + "\"></div>");
         this.prepareHowToPlayDialog();
 
         var selfObj = this;
@@ -1917,10 +1917,10 @@ class XCardGameEngine extends ModuleObject {
             hjow_error(e);
         }
     };
-    protected getSelectedGameMode(): XCardGameMode {
+    protected getSelectedGameMode(): XCalcGameMode {
         return this.gameModeList[this.gameModeIndex];
     };
-    protected getPlayerNowTurn(): XCardPlayer {
+    protected getPlayerNowTurn(): XCalcPlayer {
         return this.players[this.turnPlayerIndex];
     };
     public isGameOn(): boolean {
@@ -1931,15 +1931,15 @@ class XCardGameEngine extends ModuleObject {
             this.players[idx].resetCards();
         }
     };
-    public setTurnIndex(turnPlayerIndex: number, mode: XCardGameMode) {
+    public setTurnIndex(turnPlayerIndex: number, mode: XCalcGameMode) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         if (mode.getUniqueId() != this.getSelectedGameMode().getUniqueId()) return;
         this.turnPlayerIndex = turnPlayerIndex;
     };
-    public setTurnTime(turnPlayerTime: number, mode: XCardGameMode) {
+    public setTurnTime(turnPlayerTime: number, mode: XCalcGameMode) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         if (mode.getUniqueId() != this.getSelectedGameMode().getUniqueId()) return;
         this.turnPlayerTime = turnPlayerTime;
     };
@@ -1955,7 +1955,7 @@ class XCardGameEngine extends ModuleObject {
         hjow_log(hjow_trans("The game is preparing to start."));
 
         // 게임 모드별 처리
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
 
         hjow_log(hjow_trans("Mode") + " : " + hjow_trans(gameMode.getName()));
         hjow_log(hjow_trans(gameMode.getDescription()));
@@ -1972,7 +1972,7 @@ class XCardGameEngine extends ModuleObject {
             if (this.turnPlayerIndex < 0) this.turnPlayerIndex = 0;
             if (this.turnPlayerIndex >= this.players.length - 1) this.turnPlayerIndex = this.players.length - 1;
 
-            var turnPlayer: XCardPlayer = this.getPlayerNowTurn();
+            var turnPlayer: XCalcPlayer = this.getPlayerNowTurn();
             
             // 제한 시간 세팅 (처음 시작하는 플레이어는 1초 혜택)
             this.turnPlayerTime = this.getSelectedGameMode().getEachPlayerTimeLimit(turnPlayer, this) + 1;
@@ -2044,20 +2044,20 @@ class XCardGameEngine extends ModuleObject {
         this.actPlayerTurnStopRequest = false;
         this.actPlayerTurnRequest = true;
     };
-    public setPauseTimeLimit(pause: boolean, mode: XCardGameMode) {
+    public setPauseTimeLimit(pause: boolean, mode: XCalcGameMode) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId()) return;
         this.pauseTimeLimit = pause;
     };
     protected prepareRecordingReplay() {
-        this.replay = new XCardReplay();
+        this.replay = new XCalcReplay();
         this.replay.players = [];
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             var plainObj: any = this.players[pdx].toPlainObject(this);
-            var cloned: XCardPlayer = null;
+            var cloned: XCalcPlayer = null;
             for (var pcdx = 0; pcdx < this.playerTypes.length; pcdx++) {
-                var creator: XCardPlayerCreator = this.playerTypes[pcdx];
+                var creator: XCalcPlayerCreator = this.playerTypes[pcdx];
                 cloned = creator.restoreFromPlainObject(plainObj, this);
                 if (cloned != null) break;
             }
@@ -2072,7 +2072,7 @@ class XCardGameEngine extends ModuleObject {
         this.replay.deck = [];
         for (var cdx = 0; cdx < this.deck.length; cdx++) {
             var newCardObj = this.deck[cdx].toPlainObjectDetail(this);
-            var newCard: XCard = new XCard();
+            var newCard: XCalc = new XCalc();
             newCard.no = newCardObj.no;
             newCard.op = newCardObj.op;
             newCard.setUniqueId(this, newCardObj.uniqueId);
@@ -2085,7 +2085,7 @@ class XCardGameEngine extends ModuleObject {
     public isActPlayerStopRequested(): boolean {
         return this.actPlayerTurnStopRequest;
     };
-    public isThisTurn(player: XCardPlayer): boolean {
+    public isThisTurn(player: XCalcPlayer): boolean {
         if (this.getPlayerNowTurn().getUniqueId() == player.getUniqueId()) return true;
         return false;
     };
@@ -2095,9 +2095,9 @@ class XCardGameEngine extends ModuleObject {
     public isHided(): boolean {
         return this.needHideScreen;
     };
-    public setDeck(cards: XCard[], mode: XCardGameMode) {
+    public setDeck(cards: XCalc[], mode: XCalcGameMode) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId()) return;
 
         this.deck = cards;
@@ -2144,11 +2144,11 @@ class XCardGameEngine extends ModuleObject {
         return false;
     };
     protected spreadCards() {
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
         gameMode.init(this.players.length);
 
         for (var idx = 0; idx < this.players.length; idx++) {
-            var currentPlayer: XCardPlayer = this.players[idx];
+            var currentPlayer: XCalcPlayer = this.players[idx];
             currentPlayer.resetCards();
             currentPlayer.setInventory(gameMode.playerInvList(currentPlayer), this);
         }
@@ -2157,13 +2157,13 @@ class XCardGameEngine extends ModuleObject {
     };
     protected save() {
         try {
-            hjow_saveOnLocalStorage('XCard', this.properties.serialize());
+            hjow_saveOnLocalStorage('XCalc', this.properties.serialize());
         } catch (e) {
             hjow_alert(e, hjow_trans('Error'));
         }
     };
     protected load() {
-        var localStoreStr: string = hjow_getOnLocalStorage('XCard');
+        var localStoreStr: string = hjow_getOnLocalStorage('XCalc');
         if (localStoreStr == null) {
             this.save();
         }
@@ -2173,7 +2173,7 @@ class XCardGameEngine extends ModuleObject {
             hjow_error(e);
         }
     };
-    protected findPlayer(uniqueId: string): XCardPlayer {
+    protected findPlayer(uniqueId: string): XCalcPlayer {
         for (var idx = 0; idx < this.players.length; idx++) {
             if (this.players[idx].getUniqueId() == uniqueId) {
                 return this.players[idx];
@@ -2185,7 +2185,7 @@ class XCardGameEngine extends ModuleObject {
         this.turnChanging = true;
         this.actPlayerTurnStopRequest = true;
 
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
         gameMode.beforeNextTurnWork(this, this.players, this.deck, this.turnNumber + 1); // 값 수정 전이므로 수정후의 값을 만들어 보냄
         if (!this.gameStarted) { // 게임 모드 쪽에서 게임을 종료했을 수도 있음
             this.refreshPage(false);
@@ -2201,7 +2201,7 @@ class XCardGameEngine extends ModuleObject {
             return;
         }
 
-        var beforePlayer: XCardPlayer = this.getPlayerNowTurn();
+        var beforePlayer: XCalcPlayer = this.getPlayerNowTurn();
         if (this.getSelectedGameMode().needHide(beforePlayer, this)) {
             this.hideScreenTime = this.getSelectedGameMode().getHideTime(beforePlayer, this);
             this.needHideScreen = true;
@@ -2232,14 +2232,14 @@ class XCardGameEngine extends ModuleObject {
     protected checkFinishGameCondition(): string {
         if (this.deck.length <= 0) return hjow_trans("The deck is empty.");
         for (var idx = 0; idx < this.players.length; idx++) {
-            var player: XCardPlayer = this.players[idx];
+            var player: XCalcPlayer = this.players[idx];
             if (player.getInventoryCardCount() <= 0) return hjow_replaceStr(hjow_trans("The player [[PLAYER]] does not have any card."), "[[PLAYER]]", player.getName());
         }
         return null;
     };
-    public finishGameFromMode(reason: string, mode: XCardGameMode) {
+    public finishGameFromMode(reason: string, mode: XCalcGameMode) {
         if (mode == null) return;
-        if (!(mode instanceof XCardGameMode)) return;
+        if (!(mode instanceof XCalcGameMode)) return;
         if (this.getSelectedGameMode().getUniqueId() != mode.getUniqueId()) return;
         this.resultReason = reason;
         this.finishGame(true);
@@ -2252,7 +2252,7 @@ class XCardGameEngine extends ModuleObject {
         this.needHideScreen = false;
         this.showSettings = false;
         this.showResult = true;
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
         gameMode.onFinishGame(this, this.players, this.deck);
 
         hjow_log(hjow_trans("Game is finished."));
@@ -2345,7 +2345,7 @@ class XCardGameEngine extends ModuleObject {
             results += "   </tr>" + "\n";
         } else {
             for (var idx: number = 0; idx < this.players.length; idx++) {
-                var currentPlayer: XCardPlayer = this.players[idx];
+                var currentPlayer: XCalcPlayer = this.players[idx];
                 results += "   <tr class='tr_player element pbasic_" + hjow_serializeString(currentPlayer.getUniqueId()) + "'>" + "\n";
                 results += "       <td class='td_player element'>" + "\n";
                 results += this.eachPlayerMainHTML(currentPlayer);
@@ -2358,7 +2358,7 @@ class XCardGameEngine extends ModuleObject {
         results += "       <td class='td_player_empty td_player_control element e140'>" + "\n";
         results += "          <select class='sel_player_type player_control element e141'>" + "\n";
         for (var tdx = 0; tdx < this.playerTypes.length; tdx++) {
-            var playerType: XCardPlayerCreator = this.playerTypes[tdx];
+            var playerType: XCalcPlayerCreator = this.playerTypes[tdx];
             if (playerType.isUserSelect()) {
                 var selectedOpt = '';
                 if (this.beforeSelectedPlayerType == playerType.getTypeName()) selectedOpt = ' selected';
@@ -2410,7 +2410,7 @@ class XCardGameEngine extends ModuleObject {
         var gameMode = this.getSelectedGameMode();
         jq(this.placeArea).find('.div_game_mode_desc').text(hjow_trans(gameMode.getDescription()));
 
-        var modeDefinedPlayers: XCardPlayer[] = gameMode.createPlayers(this);
+        var modeDefinedPlayers: XCalcPlayer[] = gameMode.createPlayers(this);
         if (modeDefinedPlayers != null) { // 게임 모드 내에 아예 플레이어 설정이 탑재된 경우 처리
             if (!onRecursives) { // 메인화면 리프레시 다시 해주어야 하므로 무한반복 방지 조치
                 // 설정이 탑재는 됐어도 플레이어 이름은 변경할 수 있으므로, 이름 동기화
@@ -2451,7 +2451,7 @@ class XCardGameEngine extends ModuleObject {
     };
     protected refreshGame() {
         jq(this.placeArea).find('.table_player_arena_each').removeClass('current_turn');
-        var currentPlayer: XCardPlayer = this.getPlayerNowTurn();
+        var currentPlayer: XCalcPlayer = this.getPlayerNowTurn();
         
         if (currentPlayer.isUserControllable()) {
             jq(this.placeArea).find('.btn_user_control').removeProp('disabled');
@@ -2467,7 +2467,7 @@ class XCardGameEngine extends ModuleObject {
         jq(this.placeArea).find('.deck_lefts').text(this.deck.length);
 
         for (var pdx = 0; pdx < this.players.length; pdx++) {
-            var playerOne: XCardPlayer = this.players[pdx];
+            var playerOne: XCalcPlayer = this.players[pdx];
             var thisTurn: boolean = (pdx == this.turnPlayerIndex);
 
             var formulaContent = playerOne.listAppliedAsString();
@@ -2486,10 +2486,10 @@ class XCardGameEngine extends ModuleObject {
                 var cardUniqueId = jq(this).attr('value');
                 invenOptList.push(cardUniqueId);
             });
-            var realInvenList: XCard[] = playerOne.listInventoryDirect(this);
+            var realInvenList: XCalc[] = playerOne.listInventoryDirect(this);
 
             var needRemoveInv: string[] = [];
-            var needAddInv: XCard[] = [];
+            var needAddInv: XCalc[] = [];
 
             for (var idx = 0; idx < invenOptList.length; idx++) {
                 var exists: boolean = false;
@@ -2523,7 +2523,7 @@ class XCardGameEngine extends ModuleObject {
             }
 
             for (var rdx2 = 0; rdx2 < needAddInv.length; rdx2++) {
-                var targetCard: XCard = needAddInv[rdx2];
+                var targetCard: XCalc = needAddInv[rdx2];
                 var newOptionHTML = "<option value='" + hjow_serializeString(targetCard.getUniqueId()) + "'>" + hjow_serializeXMLString(targetCard.toString()) + "</option>";
                 invenSel.append(hjow_toStaticHTML(newOptionHTML));
             }
@@ -2558,10 +2558,10 @@ class XCardGameEngine extends ModuleObject {
                 var cardUniqueId = jq(this).attr('value');
                 affectorOptList.push(cardUniqueId);
             });
-            var realAffectorList: XCard[] = playerOne.listAppliedDirect(this);
+            var realAffectorList: XCalc[] = playerOne.listAppliedDirect(this);
 
             var needRemoveAff: string[] = [];
-            var needAddAff: XCard[] = [];
+            var needAddAff: XCalc[] = [];
 
             for (var idx2 = 0; idx2 < affectorOptList.length; idx2++) {
                 var exists: boolean = false;
@@ -2595,7 +2595,7 @@ class XCardGameEngine extends ModuleObject {
             }
 
             for (var rdx4 = 0; rdx4 < needAddAff.length; rdx4++) {
-                var targetCard: XCard = needAddAff[rdx4];
+                var targetCard: XCalc = needAddAff[rdx4];
                 var newOptionHTML = "<option value='" + hjow_serializeString(targetCard.getUniqueId()) + "'>" + hjow_serializeXMLString(targetCard.toString()) + "</option>";
                 affectorSel.append(hjow_toStaticHTML(newOptionHTML));
             }
@@ -2673,13 +2673,13 @@ class XCardGameEngine extends ModuleObject {
         }
     };
     protected refreshResult() {
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
         jq(this.placeArea).find('.replay_result').hide();
         var finResultLb = jq(this.placeArea).find('.lb_finish_result');
         finResultLb.text('');
         if (this.resultReason != null) finResultLb.text(this.resultReason);
         for (var idx = 0; idx < this.players.length; idx++) {
-            var playerOne: XCardPlayer = this.players[idx];
+            var playerOne: XCalcPlayer = this.players[idx];
 
             var playerBlock = jq(this.placeArea).find(".presult_" + hjow_serializeString(playerOne.getUniqueId()));
             playerBlock.find(".i_name").val(playerOne.getName());
@@ -2907,7 +2907,7 @@ class XCardGameEngine extends ModuleObject {
         results += "       <td class='element e044 td_player_game_list min_height'>" + "\n";
         results += "          <div class='element e045 player_arena_div'>" + "\n";
         for (var idx = 0; idx < this.players.length; idx++) {
-            var currentPlayer: XCardPlayer = this.players[idx];
+            var currentPlayer: XCalcPlayer = this.players[idx];
             results += this.eachPlayerGameHTML(currentPlayer);
         }
         results += "          </div>" + "\n";
@@ -2939,7 +2939,7 @@ class XCardGameEngine extends ModuleObject {
         return results;
     };
     protected resultPageHTML(): string {
-        var gameMode: XCardGameMode = this.getSelectedGameMode();
+        var gameMode: XCalcGameMode = this.getSelectedGameMode();
         var results: string = "";
         results += "<table class='element e057 full layout'>" + "\n";
         results += "   <tr class='element e058'>" + "\n";
@@ -2951,12 +2951,12 @@ class XCardGameEngine extends ModuleObject {
         results += "   <tr class='element e061'>" + "\n";
         results += "      <td class='element e062'>" + "\n"
 
-        var playerOrders: XCardPlayer[] = hjow_orderPlayerList(this.players, gameMode);
+        var playerOrders: XCalcPlayer[] = hjow_orderPlayerList(this.players, gameMode);
 
         var orderNo: number = 0;
         var lastPlayerPoint: TBigInt = null;
         for (var idx = 0; idx < playerOrders.length; idx++) {
-            var playerOne: XCardPlayer = playerOrders[idx];
+            var playerOne: XCalcPlayer = playerOrders[idx];
             var playerPoint: TBigInt = playerOne.getCurrentPoint(this.getSelectedGameMode());
             if (lastPlayerPoint == null || lastPlayerPoint.compare(playerPoint) > 0) {
                 lastPlayerPoint = playerPoint;
@@ -3016,7 +3016,7 @@ class XCardGameEngine extends ModuleObject {
         
         return results;
     };
-    protected eachPlayerMainHTML(player : XCardPlayer): string {
+    protected eachPlayerMainHTML(player : XCalcPlayer): string {
         var results: string = "";
         results += "<table class='full player_each element e089'>" + "\n";
         results += "   <colgroup>" + "\n";
@@ -3051,7 +3051,7 @@ class XCardGameEngine extends ModuleObject {
         results += "</table>" + "\n";
         return results;
     };
-    protected eachPlayerGameHTML(player: XCardPlayer): string {
+    protected eachPlayerGameHTML(player: XCalcPlayer): string {
         var results: string = player.customGameHTML();
         if (results == null || results == "") {
             results = "<div class='element e103 div_player_arena_each pdiv_" + hjow_serializeString(player.getUniqueId()) + "'>";
@@ -3107,7 +3107,7 @@ class XCardGameEngine extends ModuleObject {
         } else if (this.showSettings) {
             results += "<button type='button' class='element e130 btn_go_main'>" + hjow_serializeXMLString(hjow_trans("Go back to main")) + "</button> ";
         }
-        if (jq('.hjow_xcard_how_to_play_dialog').length >= 1) { // 플레이 영역 밖에 있는 영역임 !
+        if (jq('.hjow_xcalc_how_to_play_dialog').length >= 1) { // 플레이 영역 밖에 있는 영역임 !
             results += "   <button type='button' class='element e146 btn_show_how_to'> " + hjow_serializeXMLString(hjow_trans("How to play")) + "</button>";
         }
         if ((!this.showSettings) && ((!(this.gameStarted || this.showResult || this.needHideScreen)) || this.isDebugMode())) {
@@ -3143,7 +3143,7 @@ class XCardGameEngine extends ModuleObject {
         }
 
         for (var idx = 0; idx < this.players.length; idx++) {
-            var playerOne: XCardPlayer = this.players[idx];
+            var playerOne: XCalcPlayer = this.players[idx];
             var playerBlock = jq(this.placeArea).find(".pbasic_" + hjow_serializeString(playerOne.getUniqueId()));
             if (playerBlock.length == 0) continue;
             playerOne.setName(playerBlock.find('.inp_pname').val(), this);
@@ -3215,8 +3215,8 @@ class XCardGameEngine extends ModuleObject {
         }
     };
     public payHere(targetPlayerUniqueId: string, cardUniqueId: string): string {
-        var player: XCardPlayer = this.getPlayerNowTurn(); // 현재 턴의 플레이어
-        var targetPlayer: XCardPlayer = this.findPlayer(targetPlayerUniqueId); // 대상 플레이어
+        var player: XCalcPlayer = this.getPlayerNowTurn(); // 현재 턴의 플레이어
+        var targetPlayer: XCalcPlayer = this.findPlayer(targetPlayerUniqueId); // 대상 플레이어
         
         var errMsg: string = targetPlayer.canPayByUniqId(cardUniqueId, player);
         if (errMsg != null) {
@@ -3224,7 +3224,7 @@ class XCardGameEngine extends ModuleObject {
             return errMsg;
         }
 
-        var targetCard: XCard = player.findInventoryCard(this, cardUniqueId);
+        var targetCard: XCalc = player.findInventoryCard(this, cardUniqueId);
         var targetPlayerIdx: number = -1;
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             if (targetPlayer.getUniqueId() == this.players[pdx].getUniqueId()) {
@@ -3242,9 +3242,9 @@ class XCardGameEngine extends ModuleObject {
 
         if (this.replay != null) {
             try {
-                var action = new XCardReplayAction();
+                var action = new XCalcReplayAction();
                 var plainObj = targetCard.toPlainObjectDetail(this);
-                var cloned: XCard = new XCard();
+                var cloned: XCalc = new XCalc();
                 cloned.no = plainObj.no;
                 cloned.op = plainObj.op;
                 cloned.setUniqueId(this, plainObj.uniqueId);
@@ -3386,7 +3386,7 @@ class XCardGameEngine extends ModuleObject {
         });
     };
     protected prepareEvents() {
-        var selfObj: XCardGameEngine = this;
+        var selfObj: XCalcGameEngine = this;
         var selfAny: any = this.getSelfObject(); // 이렇게 안하면 타입스크립트 제한사항 때문에 메소드 부여가 안 됨
         selfAny.events = {};
         selfAny.events.main = {};
@@ -3395,7 +3395,7 @@ class XCardGameEngine extends ModuleObject {
         };
         selfAny.events.main.btn_add_player = function () {
             var typeOf: string = jq(selfObj.getPlaceArea()).find('.sel_player_type').val();
-            var playerCreator: XCardPlayerCreator = null;
+            var playerCreator: XCalcPlayerCreator = null;
             for (var idx = 0; idx < selfObj.playerTypes.length; idx++) {
                 if (selfObj.playerTypes[idx].getTypeName() == typeOf) {
                     playerCreator = selfObj.playerTypes[idx];
@@ -3407,7 +3407,7 @@ class XCardGameEngine extends ModuleObject {
                 return;
             }
 
-            var newPlayer: XCardPlayer = playerCreator.create(playerCreator.getTypeName() + " " + selfObj.players.length);
+            var newPlayer: XCalcPlayer = playerCreator.create(playerCreator.getTypeName() + " " + selfObj.players.length);
             selfObj.players.push(newPlayer);
             selfObj.beforeSelectedPlayerType = playerCreator.getTypeName();
             selfObj.refreshPage(false);
@@ -3455,14 +3455,14 @@ class XCardGameEngine extends ModuleObject {
         };
         selfAny.events.game = {};
         selfAny.events.game.btn_get_from_deck = function () {
-            var player: XCardPlayer = selfObj.players[selfObj.turnPlayerIndex];
-            var card: XCard = selfObj.deck[0];
+            var player: XCalcPlayer = selfObj.players[selfObj.turnPlayerIndex];
+            var card: XCalc = selfObj.deck[0];
             hjow_removeItemFromArray(selfObj.deck, 0);
             player.addOneOnInventory(card, selfObj);
 
             if (selfObj.replay != null) {
                 try {
-                    var action = new XCardReplayAction();
+                    var action = new XCalcReplayAction();
                     action.card = null;
                     action.actionPlayerIndex = selfObj.turnPlayerIndex;
                     action.payTargetPlayerIndex = -1;
@@ -3478,7 +3478,7 @@ class XCardGameEngine extends ModuleObject {
             selfObj.nextTurn();
         };
         selfAny.events.game.btn_pay_here = function (playerUniqId: string) {
-            var player: XCardPlayer = selfObj.players[selfObj.turnPlayerIndex]; // 현재 턴의 플레이어
+            var player: XCalcPlayer = selfObj.players[selfObj.turnPlayerIndex]; // 현재 턴의 플레이어
 
             var playerInvenObj = jq(selfObj.getPlaceArea()).find(".pplace_" + hjow_serializeString(player.getUniqueId()) + " .inventory");
             var selectedCardVal = playerInvenObj.val(); // 배열
@@ -3532,7 +3532,7 @@ class XCardGameEngine extends ModuleObject {
         return themeOne;
     };
     protected prepareHowToPlayDialog() {
-        var dialogObj = jq('.hjow_xcard_how_to_play_dialog');
+        var dialogObj = jq('.hjow_xcalc_how_to_play_dialog');
 
         var htmls = "";
         
@@ -3585,7 +3585,7 @@ class XCardGameEngine extends ModuleObject {
         dialogObj.html(htmls);
     };
     protected showHowToPlayDialog() {
-        var dialogObj = jq('.hjow_xcard_how_to_play_dialog');
+        var dialogObj = jq('.hjow_xcalc_how_to_play_dialog');
         if (dialogObj.length <= 0) return;
         dialogObj.dialog({
             width: 780,
@@ -3723,11 +3723,11 @@ class XCardGameEngine extends ModuleObject {
     };
 };
 
-class XCardReplayEngine extends XCardGameEngine {
+class XCalcReplayEngine extends XCalcGameEngine {
     protected recordedDate: Date = null;
-    protected actions: XCardReplayAction[] = [];
+    protected actions: XCalcReplayAction[] = [];
     protected lastMessage: string = "";
-    public constructor(plcArea: string = '.hjow_xcard_style_place', additionalRefreshFunction: Function = null, debugMode: boolean = false) {
+    public constructor(plcArea: string = '.hjow_xcalc_style_place', additionalRefreshFunction: Function = null, debugMode: boolean = false) {
         super(plcArea, additionalRefreshFunction, debugMode);
         this.name = "X Card Replay Player";
         this.desc = "X Card Replay Play Engine";
@@ -3789,16 +3789,16 @@ class XCardReplayEngine extends XCardGameEngine {
 
         return results;
     };
-    protected getThisTurnAction(): XCardReplayAction {
+    protected getThisTurnAction(): XCalcReplayAction {
         return this.actions[this.turnNumber];
     };
-    protected getLastTurnAction(): XCardReplayAction {
+    protected getLastTurnAction(): XCalcReplayAction {
         if (this.turnNumber == 0) return null;
         return this.actions[this.turnNumber - 1];
     };
     protected prepareEvents() {
         super.prepareEvents();
-        var selfObj: XCardReplayEngine = this; // 부모 클래스로 타입을 지정하면 아래쪽에서 부모 클래스의 멤버변수에 액세스가 안 됨...
+        var selfObj: XCalcReplayEngine = this; // 부모 클래스로 타입을 지정하면 아래쪽에서 부모 클래스의 멤버변수에 액세스가 안 됨...
         var selfAny: any = this.getSelfObject(); // 이렇게 안하면 타입스크립트 제한사항 때문에 메소드 부여가 안 됨...
         selfAny.events.game.btn_next = function () {
             var actionPlayer = selfObj.turnPlayerIndex;
@@ -3823,20 +3823,20 @@ class XCardReplayEngine extends XCardGameEngine {
         };
     };
     protected onTurnChangedBefore(focusPlayerIndex: number) {
-        var action: XCardReplayAction = this.getLastTurnAction();
-        var player: XCardPlayer = this.players[focusPlayerIndex];
+        var action: XCalcReplayAction = this.getLastTurnAction();
+        var player: XCalcPlayer = this.players[focusPlayerIndex];
         if (action.payTargetPlayerIndex < 0 || action.card == null) {
             var deckCard = this.deck[0];
             hjow_removeItemFromArray(this.deck, 0);
             player.addOneOnInventory(deckCard, this);
         } else {
-            var targetPlayer: XCardPlayer = this.players[action.payTargetPlayerIndex];
+            var targetPlayer: XCalcPlayer = this.players[action.payTargetPlayerIndex];
             targetPlayer.pay(action.card, player);
         }
     };
     protected onTurnChangedAfter() {
         hjow_log(hjow_replaceStr(hjow_replaceStr(hjow_trans("Turn [[TURN]], [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()), "[[TURN]]", String((this.turnNumber + 1))));
-        var action: XCardReplayAction = this.getThisTurnAction();
+        var action: XCalcReplayAction = this.getThisTurnAction();
         if (action.payTargetPlayerIndex < 0 || action.card == null) {
             hjow_log(hjow_replaceStr(hjow_trans("The player '[[PLAYER]]' take a card from the deck."), "[[PLAYER]]", this.players[action.actionPlayerIndex].getName()));
         } else {
@@ -3868,7 +3868,7 @@ class XCardReplayEngine extends XCardGameEngine {
             this.recordedDate = hjow_string_to_date(jsonObj.date);
             this.deck = [];
             for (var ddx = 0; ddx < jsonObj.deck.length; ddx++) {
-                var newCard: XCard = new XCard();
+                var newCard: XCalc = new XCalc();
                 newCard.op = jsonObj.deck[ddx].op;
                 newCard.no = jsonObj.deck[ddx].no;
                 newCard.setUniqueId(this, jsonObj.deck[ddx].uniqueId);
@@ -3878,7 +3878,7 @@ class XCardReplayEngine extends XCardGameEngine {
             this.players = [];
             for (var pdx = 0; pdx < jsonObj.players.length; pdx++) {
                 var playerOneObj = jsonObj.players[pdx];
-                var newPlayer: XCardPlayer = null;
+                var newPlayer: XCalcPlayer = null;
                 for (var ptdx = 0; ptdx < this.playerTypes.length; ptdx++) {
                     if (this.playerTypes[ptdx].getSupportPlayerClassName() == playerOneObj.type) {
                         newPlayer = this.playerTypes[ptdx].restoreFromPlainObject(playerOneObj, this);
@@ -3905,12 +3905,12 @@ class XCardReplayEngine extends XCardGameEngine {
             this.actions = [];
             for (var adx = 0; adx < jsonObj.actions.length; adx++) {
                 var actionObj = jsonObj.actions[adx];
-                var actionOne: XCardReplayAction = new XCardReplayAction();
+                var actionOne: XCalcReplayAction = new XCalcReplayAction();
 
                 if (actionObj.card == null) {
                     actionOne.card = null;
                 } else {
-                    var targetCard: XCard = new XCard();
+                    var targetCard: XCalc = new XCalc();
                     targetCard.op = actionObj.card.op;
                     targetCard.no = actionObj.card.no;
                     targetCard.setUniqueId(this, actionObj.card.uniqueId);
@@ -3954,8 +3954,8 @@ class XCardReplayEngine extends XCardGameEngine {
         gameArea.find('.selalter_option').removeClass('selected');
         gameArea.find('select.inventory').val(null);
 
-        var currentPlayer: XCardPlayer = this.getPlayerNowTurn();
-        var action: XCardReplayAction = this.getThisTurnAction();
+        var currentPlayer: XCalcPlayer = this.getPlayerNowTurn();
+        var action: XCalcReplayAction = this.getThisTurnAction();
 
         var curPlayerSel = gameArea.find('.pplace_' + currentPlayer.getUniqueId());
         var invSel = curPlayerSel.find('select.inventory');
